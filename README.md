@@ -13,7 +13,7 @@ A tiny ESP32-C3 powered car dashboard companion with sensors, animations, and a 
 - 🌡️ Temperature, humidity & pressure (AHT20 + BMP280)
 - 📐 6-axis IMU with car tilt indicator (BMI160)
 - 🔋 Battery voltage & percentage display
-- 🎞️ GIF animation playback on OLED
+- 🎞️ 44 GIF animations with RLE compression on OLED
 - 💤 Motion-triggered wake from light sleep
 - 🔊 Startup beep (S.T.A.L.K.E.R. PDA style)
 - 🖨️ Fully 3D printed enclosure (CAD files included)
@@ -58,7 +58,7 @@ A tiny ESP32-C3 powered car dashboard companion with sensors, animations, and a 
 
 | # | Screen | Description |
 |---|--------|-------------|
-| 0 | Animation | GIF animation playback |
+| 0 | Animation | GIF animation playback (idle ↔ random) |
 | 1 | Clock | Uptime HH:MM:SS + battery |
 | 2 | IMU | Accel (m/s²) + Gyro (deg/s) |
 | 3 | Environment | Temp / Humidity / Pressure |
@@ -71,28 +71,51 @@ A tiny ESP32-C3 powered car dashboard companion with sensors, animations, and a 
 
 ---
 
+## Animation System
+
+Screen 0 plays animations in alternating pattern: `sys_idle` → random → `sys_idle` → random → ...
+
+Each full animation cycle triggers the switch. There are 44 animations total, stored as RLE-compressed C headers in `assets/animations/`.
+
+### Animation list
+
+| Category | Animations |
+|----------|-----------|
+| System | sys_idle, sys_scx |
+| Eyes | eye_wink, eye_look_right, eye_look_left, eye_squint, eye_peek |
+| Emotions | emotion_happy, emotion_smile, emotion_smirk, emotion_proud, emotion_love_01, emotion_love_02, emotion_uwu, emotion_relaxed, emotion_distracted, emotion_surprised, emotion_scared, emotion_frustrated, emotion_dizzy, emotion_angry_01, emotion_angry_03, emotion_angry_04, emotion_angry_fire, emotion_devil_02 |
+| Actions | action_eat, action_yawn, action_sleepy, action_sneeze_01, action_sneeze_02, action_speed, action_pingpong, action_water_gun_01, action_water_gun_02 |
+| Effects | effect_sakura, effect_rotate, effect_shrink |
+| Themes | theme_bee, theme_dragon, theme_nose_fire |
+| Other | Hello, cry, slayer, MD |
+
+---
+
 ## Project Structure
 
 ```
 kurumachi/
-├── firmware/
+├── frimware/
 │   └── kurumachi/
+│       ├── src/
+│       │   ├── main.cpp
+│       │   ├── config.h
+│       │   ├── bmi160.h
+│       │   ├── battery.h
+│       │   ├── buzzer.h
+│       │   ├── sleep.h
+│       │   ├── button.h
+│       │   ├── bitmaps.h
+│       │   ├── display.h
+│       │   ├── animation.h       ← RLE animator engine
+│       │   ├── animations_list.h ← all 44 AnimDef declarations
+│       │   └── scenes.h
 │       └── assets/
-│            ├── animations/           ← generated .h files from GIFs
-│            └── gifs/
-│       ├── main.cpp
-│       ├── config.h
-│       ├── bmi160.h
-│       ├── battery.h
-│       ├── buzzer.h
-│       ├── sleep.h
-│       ├── button.h
-│       ├── bitmaps.h
-│       ├── display.h
-│       └── scenes.h
-├── cad/                    ← 3D printable enclosure files
+│           ├── animations/       ← RLE .h files (generated)
+│           └── gifs/             ← source GIF files
+├── cad/                          ← 3D printable enclosure files
 ├── tools/
-│   └── gif2header.py       ← GIF → C header converter
+│   └── gif2header.py             ← GIF → RLE C header converter
 └── README.md
 ```
 
@@ -111,6 +134,7 @@ kurumachi/
 olikraus/U8g2
 adafruit/Adafruit AHTX0
 adafruit/Adafruit BMP280 Library
+adafruit/Adafruit BusIO
 ```
 
 ### platformio.ini
@@ -120,12 +144,19 @@ adafruit/Adafruit BMP280 Library
 platform = espressif32
 board = esp32-c3-devkitm-1
 framework = arduino
+board_build.mcu = esp32c3
+board_build.f_cpu = 80000000L
+board_upload.flash_size = 4MB
+board_build.flash_size = 4MB
+board_build.partitions = huge_app.csv
 monitor_speed = 115200
+monitor_filters = esp32_exception_decoder
 
 lib_deps =
   olikraus/U8g2
   adafruit/Adafruit AHTX0
   adafruit/Adafruit BMP280 Library
+  adafruit/Adafruit BusIO
 ```
 
 ### Flash
@@ -144,25 +175,26 @@ pio device monitor --baud 115200
 
 ## GIF Converter
 
-Convert any GIF to a C header for the OLED:
+Converts GIF animations to RLE-compressed C headers for the OLED.
 
 ```bash
 pip install Pillow
-python tools/gif2header.py input.gif --name my_anim
+python tools/gif2header.py ./gifs ./assets/animations --invert
 ```
 
 Options:
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--name` | filename | C variable name |
 | `--threshold` | 128 | Binarization threshold (0–255) |
 | `--invert` | off | Invert black/white |
-| `--scale` | fit | `fit` / `stretch` / `fit_width` / `fit_height` |
+| `--scale` | fit | `fit` / `stretch` |
 | `--width` | 128 | Output width in pixels |
 | `--height` | 64 | Output height in pixels |
 
-Then include the generated `.h` in your firmware and pass it to `animatorInit()`.
+The script prints compression ratio for each file. Typical ratio is 3–8x for face animations.
+
+Then regenerate `assets/animations/`, rebuild firmware.
 
 ---
 
