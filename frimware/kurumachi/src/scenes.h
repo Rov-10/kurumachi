@@ -2,18 +2,40 @@
 #include "config.h"
 #include "battery.h"
 #include "display.h"
+#include "animations_list.h"
 
-void drawStatusScreen() {
-  u8g2.clearBuffer();
-  u8g2.setFont(u8g2_font_6x10_tf);
-  u8g2.drawStr(0, 10, "Sensor init...");
-  u8g2.drawStr(0, 24, bmiOk ? "BMI160 [OK]" : "BMI160 [--]");
-  u8g2.drawStr(0, 36, ahtOk ? "AHT20  [OK]" : "AHT20  [--]");
-  u8g2.drawStr(0, 48, bmpOk ? "BMP280 [OK]" : "BMP280 [--]");
-  u8g2.sendBuffer();
+// ── Стан анімаційного екрану ──────────────────────────────────────────────────
+static Animator gAnimator;
+
+// idle=true → грає sys_idle, idle=false → грає рандомну
+static bool animIsIdle = true;
+
+void animSceneInit() {
+  animatorInit(gAnimator, &anim_sys_idle);
+  animIsIdle = true;
 }
 
+// ── Scene 0: Анімації (idle ↔ random) ────────────────────────────────────────
 void drawScene0() {
+  bool changed = animatorTick(gAnimator);
+
+  // Після завершення повного циклу — перемикаємо idle ↔ random
+  if (animatorFinished(gAnimator)) {
+    animIsIdle = !animIsIdle;
+    if (animIsIdle) {
+      animatorInit(gAnimator, &anim_sys_idle);
+    } else {
+      animatorInit(gAnimator, getRandomAnim());
+    }
+  }
+
+  if (changed) {
+    animatorDraw(gAnimator);
+  }
+}
+
+// ── Scene 1: Годинник + батарея ───────────────────────────────────────────────
+void drawScene1() {
   unsigned long t = millis() / 1000;
   char buf[24];
   float vbat = readBattery();
@@ -28,7 +50,8 @@ void drawScene0() {
   u8g2.sendBuffer();
 }
 
-void drawScene1() {
+// ── Scene 2: IMU ──────────────────────────────────────────────────────────────
+void drawScene2() {
   char buf[32];
   u8g2.clearBuffer();
   u8g2.setFont(u8g2_font_6x10_tf);
@@ -44,7 +67,8 @@ void drawScene1() {
   u8g2.sendBuffer();
 }
 
-void drawScene2() {
+// ── Scene 3: Environment ──────────────────────────────────────────────────────
+void drawScene3() {
   char buf[32];
   u8g2.clearBuffer();
   u8g2.setFont(u8g2_font_6x10_tf);
@@ -58,7 +82,8 @@ void drawScene2() {
   u8g2.sendBuffer();
 }
 
-void drawScene3() {
+// ── Scene 4: Tilt ─────────────────────────────────────────────────────────────
+void drawScene4() {
   float rawRoll  = -(atan2(ax, az) * 180.0f / PI + 180.0f);
   float rawPitch = -(atan2(ay, az) * 180.0f / PI + 180.0f);
 
@@ -89,5 +114,16 @@ void drawScene3() {
   if (rollOffset != 0.0f || pitchOffset != 0.0f)
     u8g2.drawStr(58, 8, "*");
 
+  u8g2.sendBuffer();
+}
+
+// ── Статус при старті ─────────────────────────────────────────────────────────
+void drawStatusScreen() {
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_6x10_tf);
+  u8g2.drawStr(0, 10, "Sensor init...");
+  u8g2.drawStr(0, 24, bmiOk ? "BMI160 [OK]" : "BMI160 [--]");
+  u8g2.drawStr(0, 36, ahtOk ? "AHT20  [OK]" : "AHT20  [--]");
+  u8g2.drawStr(0, 48, bmpOk ? "BMP280 [OK]" : "BMP280 [--]");
   u8g2.sendBuffer();
 }

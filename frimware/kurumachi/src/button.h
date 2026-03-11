@@ -2,6 +2,9 @@
 #include "config.h"
 #include "buzzer.h"
 
+// Кількість сцен — тепер 5 (0=Anim, 1=Clock, 2=IMU, 3=ENV, 4=Tilt)
+#define SCENE_COUNT 5
+
 void handleButton() {
   unsigned long now     = millis();
   bool          pressed = digitalRead(PIN_TOUCH) == HIGH;
@@ -30,11 +33,19 @@ void handleButton() {
 
   if (tapCount > 0 && (now - lastTapTime) > DOUBLE_TAP_MS) {
     if (tapCount == 1) {
-      currentScene   = (currentScene + 1) % 4;
+      uint8_t prev = currentScene;
+      currentScene = (currentScene + 1) % SCENE_COUNT;
       lastMotionTime = now;
       beep(1200, 40);
+
+      // При поверненні на анімаційний екран — перезапускаємо з sys_idle
+      if (currentScene == 0 && prev != 0) {
+        animSceneInit();
+      }
+
     } else if (tapCount >= 2) {
-      if (currentScene == 3) {
+      // Подвійний тап на Tilt (scene 4) — калібрування
+      if (currentScene == 4) {
         if (rollOffset != 0.0f || pitchOffset != 0.0f) {
           rollOffset  = 0.0f;
           pitchOffset = 0.0f;
