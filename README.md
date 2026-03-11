@@ -2,7 +2,7 @@
 
 A tiny ESP32-C3 powered desktop companion with sensors, animations, and a 3D printed body.
 
-![Kurumachi](photo.jpg)
+![Kurumachi](kurumachi.png)
 
 ---
 
