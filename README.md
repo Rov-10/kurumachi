@@ -77,7 +77,10 @@ A tiny ESP32-C3 powered car dashboard companion with sensors, animations, and a 
 kurumachi/
 ├── firmware/
 │   └── kurumachi/
-│       ├── kurumachi.ino
+│       └── assets/
+│            ├── animations/           ← generated .h files from GIFs
+│            └── gifs/
+│       ├── main.cpp
 │       ├── config.h
 │       ├── bmi160.h
 │       ├── battery.h
@@ -86,9 +89,7 @@ kurumachi/
 │       ├── button.h
 │       ├── bitmaps.h
 │       ├── display.h
-│       ├── animation.h
-│       ├── scenes.h
-│       └── anim/           ← generated .h files from GIFs
+│       └── scenes.h
 ├── cad/                    ← 3D printable enclosure files
 ├── tools/
 │   └── gif2header.py       ← GIF → C header converter
