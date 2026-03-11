@@ -2,7 +2,9 @@
 
 A tiny ESP32-C3 powered car dashboard companion with sensors, animations, and a 3D printed body.
 
-![Kurumachi](kurumachi.png)
+<p align="center">
+  <img src="kurumachi.png" alt="Kurumachi" width="250" height="250" />
+</p>
 
 ---
 
