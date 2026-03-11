@@ -1,6 +1,6 @@
 # 🤖 Kurumachi
 
-A tiny ESP32-C3 powered desktop companion with sensors, animations, and a 3D printed body.
+A tiny ESP32-C3 powered car dashboard companion with sensors, animations, and a 3D printed body.
 
 ![Kurumachi](kurumachi.png)
 
