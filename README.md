@@ -15,7 +15,7 @@ A tiny ESP32-C3 powered car dashboard companion with sensors, animations, and a 
 - 🔋 Battery voltage & percentage display
 - 🎞️ 44 GIF animations with RLE compression on OLED
 - 💤 Motion-triggered wake from light sleep
-- 🔊 Startup beep (S.T.A.L.K.E.R. PDA style)
+- 🔊 Startup beep
 - 🖨️ Fully 3D printed enclosure (CAD files included)
 
 ---
