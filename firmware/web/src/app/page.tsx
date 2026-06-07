@@ -1,6 +1,7 @@
 import { Cpu, Monitor, Radio } from "lucide-react";
 import CodeShowcase from "../components/CodeShowcase"; // <-- Додали імпорт
 import Configurator from "@/components/Configurator";
+import AnimationsShowcase from "@/components/AnimationsShowcase";
 
 export default function Home() {
   return (
@@ -52,6 +53,7 @@ export default function Home() {
         {/* <-- Додаємо наш новий компонент сюди --> */}
         <CodeShowcase />
         <Configurator />
+        <AnimationsShowcase />
 
       </section>
     </main>

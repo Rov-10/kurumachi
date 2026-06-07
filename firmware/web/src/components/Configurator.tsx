@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
+import { Sliders, Terminal, Power, RefreshCw, MessageSquare, Play } from "lucide-react";
 import { useSerial } from "../hooks/useSerial";
-import { Sliders, Terminal, Power, RefreshCw, MessageSquare } from "lucide-react";
+import { KURUMACHI_ANIMATIONS, AnimationItem } from "../app/animations";
 
 export default function Configurator() {
   const { status, logs, connect, disconnect, sendData } = useSerial();
-  const [brightness, setBrightness] = useState(80);
-  const [customText, setCustomText] = useState("");
+  const [brightness, setBrightness] = useState<number>(80);
+  const [animSpeed, setAnimSpeed] = useState<number>(50);
+  const [customText, setCustomText] = useState<string>("");
 
   const handleBrightnessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value);
@@ -14,7 +16,13 @@ export default function Configurator() {
     sendData(`SET_DISP_BRIGHT:${val}`);
   };
 
-  const handleSendText = (e: React.FormEvent) => {
+  const handleSpeedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value);
+    setAnimSpeed(val);
+    sendData(`SET_ANIM_SPEED:${val}`); // Передаємо команду швидкості
+  };
+
+  const handleSendText = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (customText.trim()) {
       sendData(`PRINT_OLED:${customText}`);
@@ -22,9 +30,12 @@ export default function Configurator() {
     }
   };
 
+  const triggerHardwareAnimation = (animId: string) => {
+    sendData(`SET_ANIM:${animId}`); // Команда негайного перемикання емоції
+  };
+
   return (
     <div id="configurator" className="w-full max-w-4xl mt-32 border border-nothing-border bg-nothing-gray/20 rounded-3xl overflow-hidden backdrop-blur-sm">
-      {/* Шапка панелі */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 border-b border-nothing-border gap-4 bg-nothing-gray/30">
         <div>
           <h2 className="font-dot text-3xl text-white flex items-center gap-2">
@@ -49,35 +60,55 @@ export default function Configurator() {
         </button>
       </div>
 
-      {/* Основна сітка налаштувань */}
       <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-nothing-border">
-        
-        {/* Ліва частина: Елементи керування */}
-        <div className={`p-8 space-y-8 transition-opacity duration-300 ${status === "connected" ? "opacity-100" : "opacity-40 pointer-events-none"}`}>
+        {/* Керування */}
+        <div className={`p-8 space-y-6 transition-opacity duration-300 ${status === "connected" ? "opacity-100" : "opacity-40 pointer-events-none"}`}>
           <div>
-            <label className="font-dot text-lg text-nothing-text/80 uppercase block mb-4">
+            <label className="font-dot text-lg text-nothing-text/80 uppercase block mb-2">
               OLED Brightness: {brightness}%
             </label>
             <input
-              type="range"
-              min="10"
-              max="100"
-              value={brightness}
-              onChange={handleBrightnessChange}
+              type="range" min="10" max="100" value={brightness} onChange={handleBrightnessChange}
               className="w-full h-1 bg-nothing-border accent-nothing-red rounded-lg appearance-none cursor-pointer"
             />
           </div>
 
           <div>
-            <label className="font-dot text-lg text-nothing-text/80 uppercase block mb-3">
+            <label className="font-dot text-lg text-nothing-text/80 uppercase block mb-2">
+              Animation Frame Delay: {animSpeed}ms
+            </label>
+            <input
+              type="range" min="10" max="200" value={animSpeed} onChange={handleSpeedChange}
+              className="w-full h-1 bg-nothing-border accent-nothing-red rounded-lg appearance-none cursor-pointer"
+            />
+          </div>
+
+          <div>
+            <label className="font-dot text-lg text-nothing-text/80 uppercase block mb-2">
+              Quick Trigger Local Emotion
+            </label>
+            <div className="grid grid-cols-2 gap-2 max-h-[110px] overflow-y-auto pr-1">
+              {KURUMACHI_ANIMATIONS.slice(0, 6).map((anim: AnimationItem) => (
+                <button
+                  key={anim.id}
+                  onClick={() => triggerHardwareAnimation(anim.id)}
+                  className="border border-nothing-border px-3 py-1.5 text-xs font-mono rounded hover:border-nothing-red text-left flex items-center justify-between group/btn truncate"
+                >
+                  <span className="truncate">{anim.name}</span>
+                  <Play className="w-3 h-3 text-nothing-text/40 group-hover/btn:text-nothing-red flex-shrink-0" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="font-dot text-lg text-nothing-text/80 uppercase block mb-2">
               Push Notification to Screen
             </label>
             <form onSubmit={handleSendText} className="flex gap-2">
               <input
-                type="text"
-                placeholder="Type system alert..."
-                value={customText}
-                onChange={(e) => setCustomText(e.target.value)}
+                type="text" placeholder="Type system alert..." value={customText}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCustomText(e.target.value)}
                 className="flex-1 bg-black border border-nothing-border px-4 py-2 text-sm focus:outline-none focus:border-nothing-red font-mono"
               />
               <button type="submit" className="border border-nothing-border px-4 py-2 hover:bg-white hover:text-black transition-colors">
@@ -86,18 +117,18 @@ export default function Configurator() {
             </form>
           </div>
 
-          <div className="pt-4 border-t border-nothing-border flex gap-4">
+          <div className="pt-2">
             <button
               onClick={() => sendData("SYS_RESET")}
-              className="flex-1 border border-nothing-border py-3 text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:border-nothing-red hover:text-nothing-red transition-colors"
+              className="w-full border border-nothing-border py-2.5 text-xs uppercase tracking-widest flex items-center justify-center gap-2 hover:border-nothing-red hover:text-nothing-red transition-colors"
             >
-              <RefreshCw className="w-4 h-4" /> Reset Dev Kit
+              <RefreshCw className="w-3 h-3" /> Reset Dev Kit
             </button>
           </div>
         </div>
 
-        {/* Права частина: Логи терміналу */}
-        <div className="p-6 bg-black/50 flex flex-col h-[320px]">
+        {/* Логи терміналу */}
+        <div className="p-6 bg-black/50 flex flex-col h-[380px]">
           <div className="flex items-center gap-2 text-nothing-text/50 font-dot text-sm uppercase tracking-widest mb-3 pb-2 border-b border-nothing-border">
             <Terminal className="w-4 h-4" />
             System Live Logs
@@ -106,7 +137,7 @@ export default function Configurator() {
             {logs.length === 0 ? (
               <p className="text-nothing-text/20 italic">Awaiting hardware initialization sequence...</p>
             ) : (
-              logs.map((log, idx) => (
+              logs.map((log: string, idx: number) => (
                 <p key={idx} className={log.includes("Sending") ? "text-nothing-red" : log.includes("connected") ? "text-green-500" : "text-nothing-text/60"}>
                   {log}
                 </p>
@@ -114,7 +145,6 @@ export default function Configurator() {
             )}
           </div>
         </div>
-
       </div>
     </div>
   );
