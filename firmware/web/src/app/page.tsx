@@ -2,6 +2,7 @@ import { Cpu, Monitor, Radio } from "lucide-react";
 import CodeShowcase from "../components/CodeShowcase"; // <-- Додали імпорт
 import Configurator from "@/components/Configurator";
 import AnimationsShowcase from "@/components/AnimationsShowcase";
+import ThreeViewer from "../components/ThreeViewer";
 
 export default function Home() {
   return (
@@ -21,16 +22,7 @@ export default function Home() {
           Your open-source companion. Engineered with precise ESP32-C3 architecture, dynamic OLED expressions, and seamless sensor integration.
         </p>
 
-        <div className="w-full max-w-4xl aspect-video border border-nothing-border bg-nothing-gray/50 rounded-3xl mb-20 flex items-center justify-center relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
-          <p className="font-dot text-nothing-text/40 z-20 absolute bottom-6 left-8 uppercase tracking-widest flex items-center gap-2">
-            <span className="w-2 h-2 bg-nothing-red rounded-full animate-pulse"></span>
-            3D Visualizer Active
-          </p>
-          <div className="text-nothing-border font-dot text-6xl opacity-20 transform -rotate-12 group-hover:scale-110 transition-transform duration-700">
-            [ 3D MODEL PLACEHOLDER ]
-          </div>
-        </div>
+        <ThreeViewer />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl text-left">
           <div className="border border-nothing-border p-8 hover:border-nothing-text transition-colors duration-300">
