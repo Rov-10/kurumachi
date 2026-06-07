@@ -13,9 +13,9 @@ export default function Home() {
       </nav>
 
       <section className="w-full max-w-7xl px-6 pt-40 flex flex-col items-center text-center">
-        <h1 className="font-dot text-6xl md:text-8xl lg:text-9xl text-white tracking-tighter mb-6">
-          MEET KURUMACHI
-        </h1>
+        <h1 className="font-dot text-6xl md:text-8xl lg:text-9xl text-white mb-6 select-none">
+  MEE<span className="inline-block scale-y-110 scale-x-105 origin-bottom translate-y-[2px] mx-[2px]">T</span> KURUMACHI
+</h1>
         <p className="text-nothing-text/60 max-w-xl text-lg md:text-xl font-light mb-12">
           Your open-source companion. Engineered with precise ESP32-C3 architecture, dynamic OLED expressions, and seamless sensor integration.
         </p>
