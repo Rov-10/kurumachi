@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme {
+  --color-nothing-black: #000000;
+  --color-nothing-gray: #111111;
+  --color-nothing-border: #222222;
+  --color-nothing-red: #f01a1a;
+  --color-nothing-text: #f5f5f5;
+  --font-sans: var(--font-space), ui-sans-serif, system-ui, sans-serif;
+  --font-dot: var(--font-dot), ui-sans-serif, system-ui;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-nothing-black);
+    color: var(--color-nothing-text);
+    /* Технічна точкова сітка на фоні */
+    background-image: radial-gradient(circle, #222 1px, transparent 1px);
+    background-size: 24px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Кастомний скроллбар в стилі терміналу */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #333; }
+::-webkit-scrollbar-thumb:hover { background: #f01a1a; }
