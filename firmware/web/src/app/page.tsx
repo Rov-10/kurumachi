@@ -1,9 +1,9 @@
-import { ArrowRight, Cpu, Monitor, Radio } from "lucide-react";
+import { Cpu, Monitor, Radio } from "lucide-react";
+import CodeShowcase from "../components/CodeShowcase"; // <-- Додали імпорт
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center overflow-hidden">
-      {/* Навігація */}
+    <main className="flex min-h-screen flex-col items-center overflow-hidden pb-32">
       <nav className="w-full max-w-7xl flex justify-between items-center p-6 border-b border-nothing-border backdrop-blur-sm fixed top-0 z-50">
         <div className="font-dot text-2xl tracking-widest text-nothing-text">KURUMACHI<span className="text-nothing-red">.</span></div>
         <button className="text-sm uppercase tracking-widest border border-nothing-border px-4 py-2 hover:bg-white hover:text-black transition-colors duration-300">
@@ -11,8 +11,7 @@ export default function Home() {
         </button>
       </nav>
 
-      {/* Головний Hero-блок */}
-      <section className="w-full max-w-7xl px-6 pt-40 pb-20 flex flex-col items-center text-center">
+      <section className="w-full max-w-7xl px-6 pt-40 flex flex-col items-center text-center">
         <h1 className="font-dot text-6xl md:text-8xl lg:text-9xl text-white tracking-tighter mb-6">
           MEET KURUMACHI
         </h1>
@@ -20,7 +19,6 @@ export default function Home() {
           Your open-source companion. Engineered with precise ESP32-C3 architecture, dynamic OLED expressions, and seamless sensor integration.
         </p>
 
-        {/* Місце під 3D модель */}
         <div className="w-full max-w-4xl aspect-video border border-nothing-border bg-nothing-gray/50 rounded-3xl mb-20 flex items-center justify-center relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
           <p className="font-dot text-nothing-text/40 z-20 absolute bottom-6 left-8 uppercase tracking-widest flex items-center gap-2">
@@ -32,7 +30,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Характеристики (Specs Grid) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl text-left">
           <div className="border border-nothing-border p-8 hover:border-nothing-text transition-colors duration-300">
             <Cpu className="w-8 h-8 text-nothing-red mb-4" />
@@ -50,6 +47,10 @@ export default function Home() {
             <p className="text-nothing-text/60 text-sm">Integrated environmental and motion tracking for real-time responsiveness.</p>
           </div>
         </div>
+
+        {/* <-- Додаємо наш новий компонент сюди --> */}
+        <CodeShowcase />
+
       </section>
     </main>
   );
