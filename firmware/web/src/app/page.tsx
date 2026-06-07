@@ -1,5 +1,6 @@
 import { Cpu, Monitor, Radio } from "lucide-react";
 import CodeShowcase from "../components/CodeShowcase"; // <-- Додали імпорт
+import Configurator from "@/components/Configurator";
 
 export default function Home() {
   return (
@@ -50,6 +51,7 @@ export default function Home() {
 
         {/* <-- Додаємо наш новий компонент сюди --> */}
         <CodeShowcase />
+        <Configurator />
 
       </section>
     </main>
