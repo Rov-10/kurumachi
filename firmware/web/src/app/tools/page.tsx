@@ -1,5 +1,6 @@
 "use client";
 import RleConverter from "@/components/tools/RleConverter";
+import PixelStudio from "@/components/tools/pixel-studio";
 
 export default function ToolsPage() {
   return (
@@ -14,6 +15,8 @@ export default function ToolsPage() {
 
       {/* Atomic RLE Tool Subblock */}
       <RleConverter />
+
+      <PixelStudio />
     </main>
   );
 }
