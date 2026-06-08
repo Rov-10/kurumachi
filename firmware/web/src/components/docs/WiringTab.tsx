@@ -1,48 +1,53 @@
-import { Cpu, ShieldAlert } from "lucide-react";
+"use client";
 
 export default function WiringTab() {
+  const pinout = [
+    { mcu: "GPIO 4 (SDA)", device: "OLED SH1106 Display", type: "I2C Data Line" },
+    { mcu: "GPIO 5 (SCL)", device: "OLED SH1106 Display", type: "I2C Clock Line" },
+    { mcu: "3V3 Power Node", device: "VCC / OLED & Sensors", type: "DC 3.3V Output Rail" },
+    { mcu: "GND Bus Line", device: "GND / Common Ground", type: "System Reference Ground" },
+    { mcu: "GPIO 2 (ADC)", device: "Battery Sensor Array", type: "Analog Voltage Divider Input" },
+  ];
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-      <div className="border border-nothing-border bg-nothing-gray/10 p-6 rounded-2xl space-y-4">
-        <h3 className="font-dot text-xl text-white uppercase flex items-center gap-2">
-          <Cpu className="w-5 h-5 text-nothing-red" /> Hardware Pin Mapping
-        </h3>
-        <p className="text-xs text-nothing-text/40 font-mono">DEFINED IN CONFIG.H</p>
-        <div className="space-y-2 font-mono text-sm">
-          <div className="flex justify-between p-2.5 bg-black/40 border border-nothing-border rounded-lg">
-            <span className="text-nothing-text/50">I2C Master SDA Пін</span>
-            <span className="text-white font-bold">GPIO 8</span>
-          </div>
-          <div className="flex justify-between p-2.5 bg-black/40 border border-nothing-border rounded-lg">
-            <span className="text-nothing-text/50">I2C Master SCL Пін</span>
-            <span className="text-white font-bold">GPIO 9</span>
-          </div>
-          <div className="flex justify-between p-2.5 bg-black/40 border border-nothing-border rounded-lg">
-            <span className="text-nothing-text/50">TTP223 Touch Button</span>
-            <span className="text-white font-bold">GPIO 4</span>
-          </div>
-          <div className="flex justify-between p-2.5 bg-black/40 border border-nothing-border rounded-lg">
-            <span className="text-nothing-text/50">Passive Buzzer Out</span>
-            <span className="text-white font-bold">GPIO 1</span>
-          </div>
-          <div className="flex justify-between p-2.5 bg-black/40 border border-nothing-border rounded-lg">
-            <span className="text-nothing-text/50">Battery ADC Sensor</span>
-            <span className="text-white font-bold">GPIO 3 (A3)</span>
-          </div>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-left">
+      {/* Ліва частина: таблиця контактів */}
+      <div className="lg:col-span-2 border border-nothing-border bg-nothing-gray/10 rounded-3xl p-6">
+        <h3 className="font-dot text-xl text-white uppercase mb-4">I2C & Power Pin Mapping</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse font-space text-sm">
+            <thead>
+              <tr className="border-b border-nothing-border text-nothing-text/40 font-dot text-[11px] tracking-widest uppercase text-left">
+                <th className="pb-3 font-normal">ESP32-C3 Pin</th>
+                <th className="pb-3 font-normal">Target Hardware Connection</th>
+                <th className="pb-3 font-normal">Signal Type</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-nothing-border/30 text-nothing-text/80">
+              {pinout.map((pin, idx) => (
+                <tr key={idx} className="hover:bg-white/5 transition-colors">
+                  <td className="py-3.5 font-mono text-xs text-nothing-red">{pin.mcu}</td>
+                  <td className="py-3.5 font-dot text-xs text-white uppercase">{pin.device}</td>
+                  <td className="py-3.5 text-nothing-text/60">{pin.type}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <div className="border border-nothing-border bg-nothing-gray/10 p-6 rounded-2xl flex flex-col justify-between">
-        <div>
-          <h3 className="font-dot text-xl text-white uppercase flex items-center gap-2 mb-3">
-            <ShieldAlert className="w-5 h-5 text-yellow-500" /> I2C Bus Topology
-          </h3>
-          <p className="text-sm text-nothing-text/60 leading-relaxed font-sans">
-            Дисплей SH1106, акселерометр BMI160 та датчики клімату BMP/AHT підключені паралельно на одну загальну шину <strong className="text-white font-mono">Wire</strong> (GPIO 8/9). Шина розігнана до частоти <strong className="text-white font-mono">400 кГц (Fast Mode)</strong> за допомогою інструкції <code className="bg-black px-1.5 py-0.5 rounded text-nothing-red font-mono">Wire.setClock(400000)</code> для забезпечення плавності рендерингу RLE фреймів на частоті 60 FPS.
-          </p>
+      {/* Права частина: Швидкі інженерні замітки */}
+      <div className="lg:col-span-1 border border-nothing-border bg-black/40 rounded-3xl p-6 flex flex-col justify-between">
+        <div className="space-y-4">
+          <h4 className="font-dot text-sm text-white uppercase tracking-wider">Critical Hardware Alerts</h4>
+          <ul className="space-y-3 font-space text-xs text-nothing-text/60 list-disc list-inside leading-relaxed">
+            <li>Ensure the I2C bus has pull-up resistors active if the display module omits them.</li>
+            <li>Do not feed native 5V rails directly into GPIO logic lanes to avoid breakdown.</li>
+            <li>Verify solid common ground links between ESP32 and battery sensor blocks.</li>
+          </ul>
         </div>
-        <div className="mt-4 p-3.5 border border-yellow-500/20 bg-yellow-500/5 rounded-xl font-mono text-xs text-yellow-500/80">
-          ⚠️ ВАЖЛИВО: Обов&apos;язково використовуйте підтягуючі резистори (Pull-up) на 4.7 кОм на лініях SDA та SCL до живлення 3.3V.
+        <div className="pt-4 border-t border-nothing-border font-mono text-[10px] text-nothing-text/40 uppercase">
+          Architecture Core: Rev 1.2-Stable
         </div>
       </div>
     </div>

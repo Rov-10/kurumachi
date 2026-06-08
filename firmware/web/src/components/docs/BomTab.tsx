@@ -1,37 +1,32 @@
-import { CheckCircle2 } from "lucide-react";
+"use client";
 
 export default function BomTab() {
   const components = [
-    { name: "ESP32-C3 Super Mini", type: "MCU", purpose: "Основне обчислювальне ядро проєкту, обробка RLE анімацій", status: "Required" },
-    { name: "SH1106 OLED Display (I2C)", type: "Display", purpose: "Відображення емоцій, годинника, телеметрії сенсорів (128x64)", status: "Required" },
-    { name: "BMI160 (I2C)", type: "IMU Sensor", purpose: "Відстеження руху, жестів та розрахунку нахилу кузова (Tilt)", status: "Required" },
-    { name: "AHT20 + BMP280", type: "ENV Sensors", purpose: "Вимірювання температури, вологості та атмосферного тиску", status: "Required" },
-    { name: "TTP223 Touch Button", type: "Input", purpose: "Перемикання 5 системних сцен та калібрування пристрою", status: "Required" },
-    { name: "Passive Buzzer", type: "Audio", purpose: "Звуковий супровід при старті та перемиканні екранів", status: "Required" },
-    { name: "Li-Po Battery 3.7V", type: "Power", purpose: "Автономне живлення девайсу, моніторинг (A3)", status: "Required" }
+    { name: "ESP32-C3 Super Mini", qty: "1 pcs", desc: "Main MCU core with Wi-Fi/BLE & RISC-V architecture" },
+    { name: "OLED Display SH1106", qty: "1 pcs", desc: "1.3 inch monochromatic 128x64 px matrix screen via I2C" },
+    { name: "TP4056 Charge Module", qty: "1 pcs", desc: "Lithium battery charger with Type-C power input interface" },
+    { name: "Li-Po Battery 602030", qty: "1 pcs", desc: "3.7V 300mAh compact rechargeable power cell node" },
+    { name: "Custom 3D Printed Case", qty: "1 set", desc: "Cyber-organic minimalist structural shell body components" },
   ];
 
   return (
-    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
-      <div className="border border-nothing-border bg-nothing-gray/10 rounded-2xl overflow-hidden">
-        <table className="w-full border-collapse font-sans text-sm text-left">
-          <thead className="bg-nothing-gray/30 border-b border-nothing-border font-dot uppercase text-xs tracking-wider text-nothing-text/60">
-            <tr>
-              <th className="p-4">Component</th>
-              <th className="p-4">Type</th>
-              <th className="p-4">System Purpose</th>
-              <th className="p-4">Status</th>
+    <div className="border border-nothing-border bg-nothing-gray/10 rounded-3xl p-6 text-left">
+      <h3 className="font-dot text-xl text-white uppercase mb-4">Bill of Materials</h3>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse font-space text-sm">
+          <thead>
+            <tr className="border-b border-nothing-border text-nothing-text/40 font-dot text-[11px] tracking-widest uppercase text-left">
+              <th className="pb-3 font-normal">Component Name</th>
+              <th className="pb-3 font-normal">Quantity</th>
+              <th className="pb-3 font-normal">Technical Description</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-nothing-border/50 text-nothing-text/80">
-            {components.map((comp, idx) => (
-              <tr key={idx} className="hover:bg-white/2 transition-colors">
-                <td className="p-4 font-mono font-bold text-white">{comp.name}</td>
-                <td className="p-4"><span className="px-2 py-0.5 bg-nothing-border text-[11px] rounded uppercase font-mono">{comp.type}</span></td>
-                <td className="p-4 text-nothing-text/60">{comp.purpose}</td>
-                <td className="p-4 font-mono text-xs flex items-center gap-1.5 text-green-400">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> {comp.status}
-                </td>
+          <tbody className="divide-y divide-nothing-border/30 text-nothing-text/80">
+            {components.map((item, idx) => (
+              <tr key={idx} className="hover:bg-white/5 transition-colors">
+                <td className="py-3.5 font-dot text-xs text-white uppercase">{item.name}</td>
+                <td className="py-3.5 font-mono text-xs">{item.qty}</td>
+                <td className="py-3.5 text-nothing-text/60">{item.desc}</td>
               </tr>
             ))}
           </tbody>
