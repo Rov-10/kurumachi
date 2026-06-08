@@ -52,7 +52,6 @@ export default function ThreeViewer() {
           shadow-intensity="1.8"
           shadow-softness="0.8"
           environment-image="neutral"
-          scale="1.3 1.3 1.3"
           className="z-10 pointer-events-none w-full h-full bg-transparent"
         />
 
