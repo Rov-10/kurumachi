@@ -159,6 +159,26 @@ kurumachi/
 └── README.md
 ```
 
+## KURUMACHI. ECOSYSTEM ROADMAP
+
+STAGE 1: CORE INFRASTRUCTURE [COMPLETED]
+- Web Deployment Suite architecture implementation (Next.js 15).
+- Web Serial API driverless integration for ESP32-C3 USART pipelines.
+- WebGL-driven 3D CAD asset inspector using HTML5 Canvas & Three.js.
+- Client-side mathematical RLE encoder engine.
+
+STAGE 2: FIRMWARE OPTIMIZATION & CUSTOM ASSETS [IN PROGRESS]
+- Hardware debug and stability verification of the RISC-V C++ framework.
+- Implementation of dynamic client-to-node animation buffering.
+- Development of runtime custom RLE stream loading over Wi-Fi (WebSockets/HTTP Server).
+- Tilt/Roll active correction routines based on 6-Axis BMI160 IMU registers.
+
+STAGE 3: THE DIPLOMA EXTENSION (AUTOMOTIVE & MOBILE HARNESS)
+- Development of a cross-platform mobile app using Dart & Flutter.
+- Automotive integration via Skoda Fabia Mk1 CAN-Bus / K-Line hardware sniffing.
+- Bluetooth Low Energy (BLE) secure authentication and telemetry logging.
+- Low-power Deep Sleep automation coupled with vehicle ignition state triggers.
+
 ---
 
 ## License
