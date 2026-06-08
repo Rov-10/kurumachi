@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
 import { codeToHtml } from "shiki";
 
 const cppCode = `// Kurumachi Core System Initialization
@@ -11,7 +13,6 @@ void setup() {
   // Initialize subsystems
   Display::init();
   Display::showAnimation(ANIM_WAKE_UP);
-  
   IMU::calibrate();
 
   // Check vitals
@@ -24,11 +25,16 @@ void setup() {
   }
 }`;
 
-export default async function CodeShowcase() {
-  const html = await codeToHtml(cppCode, {
-    lang: "cpp",
-    theme: "github-dark-dimmed",
-  });
+export default function CodeShowcase() {
+  const [highlightedHtml, setHighlightedHtml] = useState<string>("");
+
+  useEffect(() => {
+    // Рендеримо підсвітку синтаксису після завантаження компонента в браузері
+    codeToHtml(cppCode, {
+      lang: "cpp",
+      theme: "github-dark-dimmed",
+    }).then((html) => setHighlightedHtml(html));
+  }, []);
 
   return (
     <div className="w-full max-w-4xl mt-32 relative group">
@@ -46,8 +52,12 @@ export default async function CodeShowcase() {
           </p>
         </div>
 
-        <div className="p-6 overflow-x-auto text-sm md:text-base font-mono text-left">
-          <div dangerouslySetInnerHTML={{ __html: html }} />
+        <div className="p-6 overflow-x-auto text-sm md:text-base font-mono text-left min-h-[280px]">
+          {highlightedHtml ? (
+            <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
+          ) : (
+            <pre className="text-nothing-text/20">Loading system firmware source matrix...</pre>
+          )}
         </div>
       </div>
     </div>

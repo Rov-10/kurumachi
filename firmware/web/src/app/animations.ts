@@ -1,7 +1,7 @@
 export interface AnimationItem {
   id: string;
   name: string;
-  gifName: string; // Повертаємо текстове поле
+  gifName: string; // Текстове поле
   category: "emotions" | "actions" | "effects" | "system";
 }
 
