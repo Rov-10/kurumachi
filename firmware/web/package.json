@@ -13,6 +13,7 @@
     "@next-auth/prisma-adapter": "^1.0.7",
     "clsx": "^2.1.1",
     "framer-motion": "^12.40.0",
+    "gifenc": "^1.0.3",
     "lucide-react": "^1.17.0",
     "next": "16.2.7",
     "next-auth": "^4.24.14",
