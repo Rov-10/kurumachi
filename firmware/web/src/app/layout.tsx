@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, DotGothic16 } from "next/font/google";
+import { Space_Grotesk, Silkscreen } from "next/font/google"; // <-- Змінено тут
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 
@@ -8,7 +8,8 @@ const space = Space_Grotesk({
   variable: "--font-space" 
 });
 
-const dot = DotGothic16({ 
+// Підключаємо Silkscreen замість DotGothic16
+const dot = Silkscreen({ 
   weight: "400", 
   subsets: ["latin"], 
   variable: "--font-dot" 
