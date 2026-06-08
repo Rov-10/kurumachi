@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Silkscreen } from "next/font/google"; // <-- Змінено тут
+import { Space_Grotesk, Silkscreen } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 
@@ -8,7 +8,6 @@ const space = Space_Grotesk({
   variable: "--font-space" 
 });
 
-// Підключаємо Silkscreen замість DotGothic16
 const dot = Silkscreen({ 
   weight: "400", 
   subsets: ["latin"], 
@@ -27,7 +26,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${space.variable} ${dot.variable} font-sans min-h-screen selection:bg-nothing-red selection:text-white`}>
+      {/* ДОДАНО клас text-lg до body */}
+      <body className={`${space.variable} ${dot.variable} font-sans min-h-screen text-lg selection:bg-nothing-red selection:text-white`}>
         <Navbar />
         {children}
       </body>

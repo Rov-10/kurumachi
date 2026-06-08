@@ -12,19 +12,13 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center overflow-hidden pb-32">
-      {/* Hero-зона з 3D девайсом */}
+    // ДОДАНО клас text-base, щоб скинути глобальне збільшення шрифту
+    <main className="flex min-h-screen flex-col items-center overflow-hidden pb-32 text-base">
       <HeroSection onScrollToSection={scrollToSection} />
-
-      {/* Демонстрація коду ініціалізації */}
       <CodeShowcase />
-      
-      {/* Матриця емоцій (Конфігуратор звідси повністю ВИДАЛЕНО) */}
       <div id="matrix" className="w-full flex justify-center scroll-mt-24">
         <AnimationsShowcase />
       </div>
-
-      {/* Кнопка швидкого повернення вгору */}
       <ScrollButton />
     </main>
   );
