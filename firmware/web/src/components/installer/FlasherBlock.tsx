@@ -10,7 +10,6 @@ export default function FlasherBlock() {
     setIsFlashing(true);
     setProgress(0);
     
-    // Імітація поблокового запису прошивки
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -31,7 +30,7 @@ export default function FlasherBlock() {
             <h3 className="font-dot text-2xl text-white uppercase flex items-center gap-2">
               <Download className="w-5 h-5 text-nothing-red" /> Web Flasher
             </h3>
-            <p className="text-xs text-nothing-text/40 uppercase tracking-widest mt-0.5">
+            <p className="text-xs text-nothing-text/40 uppercase tracking-widest mt-0.5 font-dot">
               Binary ROM Node Deployment
             </p>
           </div>
@@ -40,8 +39,9 @@ export default function FlasherBlock() {
           </span>
         </div>
 
-        <p className="text-sm text-nothing-text/60 leading-relaxed font-sans">
-          Заливка скомпійованого ядра прошивки прямо у флеш-пам&apos;ять ESP32-C3 через браузер. Не потребує встановлення утиліт типу esptool чи системних драйверів.
+        {/* [ФІКС ШРИФТУ]: змінено на font-space */}
+        <p className="text-sm text-nothing-text/60 leading-relaxed font-space">
+          Flash the pre-compiled firmware core directly into the ESP32-C3 flash memory using your browser. It does not require any local installation of esptool or native system drivers.
         </p>
 
         {progress > 0 && (
@@ -64,20 +64,19 @@ export default function FlasherBlock() {
         <button
           onClick={startFlashingSequence}
           disabled={isFlashing}
-          className={`flex-1 py-3 font-dot text-xs tracking-widest uppercase border transition-all duration-300 ${
-            isFlashing 
-              ? "border-yellow-500 text-yellow-500 animate-pulse bg-transparent" 
-              : "border-white bg-white text-black hover:bg-transparent hover:text-white"
-          }`}
+          className="flex-1 py-3 font-dot text-xs tracking-widest uppercase border border-white bg-white text-black hover:bg-transparent hover:text-white transition-all duration-300"
         >
           {isFlashing ? "Writing Code..." : "Flash Firmware Binary"}
         </button>
         
-        <div className="font-mono text-[10px] text-nothing-text/40 text-left leading-tight max-w-[180px]">
+        {/* [ФІКС ШРИФТУ]: підказка тепер на font-space */}
+        <div className="font-space text-[10px] text-nothing-text/40 text-left leading-tight max-w-[180px]">
           {progress === 100 ? (
-            <span className="text-green-400 flex items-center gap-1"><CheckCircle className="w-3 h-3" /> Bootloader active. Ready.</span>
+            <span className="text-green-400 flex items-center gap-1 font-mono">
+              <CheckCircle className="w-3 h-3" /> Bootloader active. Ready.
+            </span>
           ) : (
-            "• Перед стартом переведіть плату в режим завантажувача (BOOT + RESET)"
+            "• Put the device into bootloader mode (BOOT + RESET) before flashing."
           )}
         </div>
       </div>

@@ -39,18 +39,12 @@ export default function ConfiguratorBlock({ serial }: ConfiguratorBlockProps) {
           <h2 className="font-dot text-2xl text-white flex items-center gap-2">
             <Sliders className="w-5 h-5 text-nothing-red" /> CORE CONFIGURATOR
           </h2>
-          <p className="text-xs text-nothing-text/40 uppercase tracking-widest mt-0.5">Hardware Interface Subsystem</p>
+          <p className="text-xs text-nothing-text/40 uppercase tracking-widest mt-0.5 font-space">Hardware Interface Subsystem</p>
         </div>
         
         <button
           onClick={status === "connected" ? disconnect : connect}
-          className={`w-full sm:w-auto px-6 py-2.5 font-dot tracking-widest uppercase text-xs border transition-all duration-300 flex items-center justify-center gap-2 ${
-            status === "connected"
-              ? "border-nothing-red bg-nothing-red/10 text-nothing-red hover:bg-nothing-red hover:text-white"
-              : status === "connecting"
-              ? "border-yellow-500 text-yellow-500 animate-pulse"
-              : "border-nothing-text bg-transparent text-white hover:bg-white hover:text-black"
-          }`}
+          className="w-full sm:w-auto px-6 py-2.5 font-dot tracking-widest uppercase text-xs border border-nothing-text bg-transparent text-white hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center gap-2"
         >
           <Power className="w-3.5 h-3.5" />
           {status === "connected" ? "Disconnect" : status === "connecting" ? "Connecting..." : "Connect via WebSerial"}
@@ -73,12 +67,13 @@ export default function ConfiguratorBlock({ serial }: ConfiguratorBlockProps) {
             <label className="font-dot text-sm text-nothing-text/80 uppercase block mb-1.5">
               Trigger Hardware Emotion
             </label>
+            {/* Кнопки всередині сітки використовують піксельний font-dot */}
             <div className="grid grid-cols-2 gap-2 max-h-[110px] overflow-y-auto pr-1">
               {KURUMACHI_ANIMATIONS.slice(0, 6).map((anim: AnimationItem) => (
                 <button
                   key={anim.id}
                   onClick={() => sendData(`SET_ANIM:${anim.id}`)}
-                  className="border border-nothing-border px-2.5 py-1.5 text-[11px] font-mono rounded hover:border-nothing-red text-left flex items-center justify-between group/btn truncate"
+                  className="border border-nothing-border px-2.5 py-1.5 text-[11px] font-dot uppercase tracking-wider rounded hover:border-nothing-red text-left flex items-center justify-between group/btn truncate"
                 >
                   <span className="truncate">{anim.name}</span>
                   <Play className="w-2.5 h-2.5 text-nothing-text/40 group-hover/btn:text-nothing-red flex-shrink-0" />
@@ -95,7 +90,7 @@ export default function ConfiguratorBlock({ serial }: ConfiguratorBlockProps) {
               <input
                 type="text" placeholder="Type system alert..." value={customText}
                 onChange={(e) => setCustomText(e.target.value)}
-                className="flex-1 bg-black border border-nothing-border px-3 py-1.5 text-xs focus:outline-none focus:border-nothing-red font-mono"
+                className="flex-1 bg-black border border-nothing-border px-3 py-1.5 text-xs focus:outline-none focus:border-nothing-red font-space"
               />
               <button type="submit" className="border border-nothing-border px-3 py-1.5 hover:bg-white hover:text-black transition-colors">
                 <MessageSquare className="w-3.5 h-3.5" />
@@ -106,19 +101,19 @@ export default function ConfiguratorBlock({ serial }: ConfiguratorBlockProps) {
           <div className="pt-1">
             <button
               onClick={() => sendData("SYS_RESET")}
-              className="w-full border border-nothing-border py-2 text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:border-nothing-red hover:text-nothing-red transition-colors"
+              className="w-full border border-nothing-border py-2 text-[10px] uppercase tracking-widest font-dot flex items-center justify-center gap-2 hover:border-nothing-red hover:text-nothing-red transition-colors"
             >
               <RefreshCw className="w-3 h-3" /> Reset Dev Kit
             </button>
           </div>
         </div>
 
-        {/* Логи терміналу */}
+        {/* System Logs (Дотримуємося моноширинного/гротескного стилю для логів) */}
         <div className="p-4 bg-black/40 flex flex-col h-[320px] md:h-auto">
           <div className="flex items-center gap-2 text-nothing-text/50 font-dot text-xs uppercase tracking-widest mb-2 pb-1.5 border-b border-nothing-border">
             <Terminal className="w-3.5 h-3.5" /> System Live Logs
           </div>
-          <div className="flex-1 overflow-y-auto font-mono text-[11px] text-left space-y-1.5 pr-1 select-text">
+          <div className="flex-1 overflow-y-auto font-space text-[11px] text-left space-y-1.5 pr-1 select-text">
             {logs.length === 0 ? (
               <p className="text-nothing-text/20 italic">Awaiting hardware initialization sequence...</p>
             ) : (
