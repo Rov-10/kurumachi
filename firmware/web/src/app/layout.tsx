@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, DotGothic16 } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const space = Space_Grotesk({ 
   subsets: ["latin"], 
@@ -26,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${space.variable} ${dot.variable} font-sans min-h-screen selection:bg-nothing-red selection:text-white`}>
+        <Navbar />
         {children}
       </body>
     </html>
