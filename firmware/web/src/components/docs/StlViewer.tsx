@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
 
@@ -18,7 +18,7 @@ export default function StlViewer({ url }: StlViewerProps) {
     const container = containerRef.current;
 
     const scene = new THREE.Scene();
-    scene.background = null;
+    scene.background = null; // Прозорий фон для інтеграції з карткою Nothing OS
 
     const camera = new THREE.PerspectiveCamera(
       45,
@@ -26,13 +26,14 @@ export default function StlViewer({ url }: StlViewerProps) {
       0.1,
       1000
     );
-    camera.position.set(0, 0, 80);
+    camera.position.set(0, 0, 80); // Повертаємо оптимальну інженерну точку огляду
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
+    // Освітлення студійного рівня
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
     const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -42,6 +43,7 @@ export default function StlViewer({ url }: StlViewerProps) {
     dirLight2.position.set(-1, -1, -1).normalize();
     scene.add(dirLight2);
 
+    // Матовий світло-сірий інженерний пластик
     const material = new THREE.MeshStandardMaterial({
       color: 0xcccccc,
       roughness: 0.5,
@@ -52,24 +54,27 @@ export default function StlViewer({ url }: StlViewerProps) {
     let loadedGeometry: THREE.BufferGeometry | null = null;
 
     const loader = new STLLoader();
-    loader.load(url, (geometry) => {
+    loader.load(url, (geometry: THREE.BufferGeometry) => {
       loadedGeometry = geometry;
-      geometry.center();
+      geometry.center(); // Центруємо модель відносно локальних осей координат
       mesh = new THREE.Mesh(geometry, material);
+      
+      // Авто-масштабування (виправляє баг "модель не в кадрі")
       geometry.computeBoundingSphere();
       const sphere = geometry.boundingSphere;
       if (sphere) {
         const radius = sphere.radius;
-        const scale = 30 / radius;
+        const scale = 30 / radius; // Масштабуємо будь-яку модель під рамки канвасу
         mesh.scale.set(scale, scale, scale);
       }
       scene.add(mesh);
       setLoading(false);
-    }, undefined, (err) => {
-      console.error("Error loading STL:", err);
+    }, undefined, (err: unknown) => {
+      console.error("Error loading STL Matrix:", err);
       setLoading(false);
     });
 
+    // Ручний трекінг миші для обертання вузла
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
 
@@ -95,7 +100,7 @@ export default function StlViewer({ url }: StlViewerProps) {
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
       if (mesh && !isDragging) {
-        mesh.rotation.y += 0.005;
+        mesh.rotation.y += 0.005; // Легке автообертання вузла в просторі
       }
       renderer.render(scene, camera);
     };

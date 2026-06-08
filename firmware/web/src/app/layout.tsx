@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Silkscreen } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import PageTransition from "@/components/PageTransition";
 
 const space = Space_Grotesk({ 
   subsets: ["latin"], 
@@ -26,10 +27,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* ДОДАНО клас text-lg до body */}
       <body className={`${space.variable} ${dot.variable} font-sans min-h-screen text-lg selection:bg-nothing-red selection:text-white`}>
         <Navbar />
-        {children}
+        {/* Ми обгортаємо контент у наш новий компонент анімацій */}
+        <PageTransition>
+          {children}
+        </PageTransition>
       </body>
     </html>
   );
