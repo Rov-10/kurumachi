@@ -18,6 +18,7 @@ export default tseslint.config(
       'apps/firmware/**',
       'tools/**',
       '*.fzz',
+      '**/jest.config.js',
     ],
   },
 
