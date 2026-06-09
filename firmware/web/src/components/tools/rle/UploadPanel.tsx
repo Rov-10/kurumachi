@@ -35,7 +35,8 @@ export function UploadPanel({ selectedFile, setSelectedFile, invert, setInvert, 
   };
 
   return (
-    <div className="lg:col-span-1 border border-zinc-800/80 bg-[#050505] p-6 rounded-2xl flex flex-col justify-between text-left relative">
+    // ЗМІНА: Додано h-[480px] для ідеального вирівнювання з правим терміналом
+    <div className="lg:col-span-1 border border-zinc-800/80 bg-[#050505] p-6 rounded-2xl flex flex-col justify-between text-left relative h-[480px]">
       <div className="flex items-start gap-4 mb-6">
         <div className="text-red-500 font-dot text-xs leading-tight flex flex-col items-center">
           <span>01</span><span>10</span>
