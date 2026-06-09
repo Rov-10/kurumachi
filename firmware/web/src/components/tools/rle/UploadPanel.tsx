@@ -1,5 +1,5 @@
-import { useRef, useState, DragEvent, ChangeEvent } from "react";
-import { UploadCloud, FileImage } from "lucide-react";
+import { useRef, useState, DragEvent, ChangeEvent, useEffect } from "react";
+import { UploadCloud } from "lucide-react";
 
 interface UploadPanelProps {
   selectedFile: File | null;
@@ -13,7 +13,22 @@ interface UploadPanelProps {
 
 export function UploadPanel({ selectedFile, setSelectedFile, invert, setInvert, threshold, setThreshold, onProcess }: UploadPanelProps) {
   const [isDragActive, setIsDragActive] = useState<boolean>(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Генерація тимчасового URL для прев'ю гіфки
+  useEffect(() => {
+    if (selectedFile) {
+      const url = URL.createObjectURL(selectedFile);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPreviewUrl(url);
+      // Очищення пам'яті при зміні файлу
+      return () => URL.revokeObjectURL(url);
+    } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPreviewUrl(null);
+    }
+  }, [selectedFile]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -35,8 +50,7 @@ export function UploadPanel({ selectedFile, setSelectedFile, invert, setInvert, 
   };
 
   return (
-    // ЗМІНА: Додано h-[480px] для ідеального вирівнювання з правим терміналом
-    <div className="lg:col-span-1 border border-zinc-800/80 bg-[#050505] p-6 rounded-2xl flex flex-col justify-between text-left relative h-[480px]">
+    <div className="lg:col-span-1 border border-zinc-800/80 bg-[#050505] p-6 rounded-2xl flex flex-col justify-between text-left relative h-120">
       <div className="flex items-start gap-4 mb-6">
         <div className="text-red-500 font-dot text-xs leading-tight flex flex-col items-center">
           <span>01</span><span>10</span>
@@ -53,17 +67,25 @@ export function UploadPanel({ selectedFile, setSelectedFile, invert, setInvert, 
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          className={`border border-dashed rounded-xl p-8 text-center cursor-pointer transition-all group flex flex-col items-center justify-center min-h-[140px] ${
+          className={`border border-dashed rounded-xl p-8 text-center cursor-pointer transition-all group flex flex-col items-center justify-center min-h-35 ${
             isDragActive ? "border-white bg-white/5" : "border-zinc-800 bg-black hover:border-zinc-600"
           }`}
         >
           <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/gif" />
-          {selectedFile ? (
-            <>
-              <FileImage className="w-8 h-8 text-white mb-2" />
-              <span className="font-dot text-xs uppercase tracking-wider text-white max-w-full truncate px-2">{selectedFile.name}</span>
-              <span className="font-sans text-[10px] text-zinc-500 mt-1 uppercase">{(selectedFile.size / 1024).toFixed(1)} KB | Asset loaded</span>
-            </>
+          
+          {selectedFile && previewUrl ? (
+            <div className="flex flex-col items-center justify-center w-full">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src={previewUrl} 
+                alt="GIF Preview" 
+                className="max-h-17.5 w-auto object-contain rounded shadow-lg shadow-black/50"
+                style={{ imageRendering: "pixelated" }}
+              />
+              <span className="font-dot text-[10px] uppercase tracking-wider text-zinc-400 max-w-full truncate px-2 mt-4 group-hover:text-white transition-colors">
+                {selectedFile.name}
+              </span>
+            </div>
           ) : (
             <>
               <UploadCloud className="w-8 h-8 text-zinc-600 group-hover:text-white transition-colors mb-2" />
