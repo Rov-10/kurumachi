@@ -3,11 +3,9 @@ import { useState } from "react";
 export const WIDTH = 128;
 export const HEIGHT = 64;
 
-// Стирачку прибрали, додали 4 примітиви
 export type Tool = "pencil" | "bucket" | "line" | "rect" | "circle" | "triangle";
 export type BrushShape = "square" | "circle";
 
-// --- Алгоритми Брезенхема для розрахунку точок ---
 function getLinePoints(x0: number, y0: number, x1: number, y1: number) {
   const pts = [];
   const dx = Math.abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
@@ -43,9 +41,9 @@ function getCirclePoints(x0: number, y0: number, x1: number, y1: number) {
 function getTrianglePoints(x0: number, y0: number, x1: number, y1: number) {
   const mx = Math.floor((x0 + x1) / 2);
   return [
-    ...getLinePoints(mx, y0, x1, y1), // Права сторона
-    ...getLinePoints(x1, y1, x0, y1), // Основа
-    ...getLinePoints(x0, y1, mx, y0)  // Ліва сторона
+    ...getLinePoints(mx, y0, x1, y1),
+    ...getLinePoints(x1, y1, x0, y1),
+    ...getLinePoints(x0, y1, mx, y0)
   ];
 }
 
@@ -63,9 +61,24 @@ export function usePixelEngine() {
   const [showGrid, setShowGrid] = useState(true);
   const [showOnion, setShowOnion] = useState(true);
 
-  const currentFrame = frames[currentFrameIdx];
+  // ЗАХИСТ ВІД ГОСТІНГУ: Гарантуємо, що currentFrame ніколи не буде undefined
+  const safeIdx = Math.max(0, Math.min(currentFrameIdx, frames.length - 1));
+  const currentFrame = frames[safeIdx] || frames[0];
 
-  // Мутаційна функція для швидкості (впаює пензель прямо в масив)
+  const addFrame = () => {
+    setFrames(prev => {
+      const blankFrame = Array(HEIGHT).fill(null).map(() => Array(WIDTH).fill(0));
+      return [...prev, blankFrame];
+    });
+    setCurrentFrameIdx(frames.length);
+  };
+
+  const deleteFrame = () => {
+    if (frames.length === 1) return;
+    setFrames(prev => prev.filter((_, i) => i !== currentFrameIdx));
+    setCurrentFrameIdx(prev => Math.max(0, prev - 1));
+  };
+
   const applyBrushMut = (frame: number[][], cx: number, cy: number, val: 1 | 0) => {
     const radius = Math.floor(brushSize / 2);
     const isEven = brushSize % 2 === 0;
@@ -105,7 +118,6 @@ export function usePixelEngine() {
     return newFrame;
   };
 
-  // Метод для нанесення примітиву
   const applyPrimitiveToFrame = (frame: number[][], x0: number, y0: number, x1: number, y1: number, tool: Tool, val: 1 | 0) => {
     let pts: {x: number, y: number}[] = [];
     if (tool === 'line') pts = getLinePoints(x0, y0, x1, y1);
@@ -121,13 +133,13 @@ export function usePixelEngine() {
   const handleCanvasClickOrDrag = (x: number, y: number) => {
     if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return;
     const updatedFrames = [...frames];
-    const frame = updatedFrames[currentFrameIdx];
+    const frame = updatedFrames[safeIdx];
     let newFrame = frame;
 
     if (activeTool === "pencil") newFrame = applyBrush(frame, x, y, color);
     if (activeTool === "bucket") newFrame = applyFill(frame, x, y, color);
 
-    updatedFrames[currentFrameIdx] = newFrame;
+    updatedFrames[safeIdx] = newFrame;
     setFrames(updatedFrames);
   };
 
@@ -135,7 +147,8 @@ export function usePixelEngine() {
     frames, setFrames, currentFrameIdx, setCurrentFrameIdx, currentFrame,
     activeTool, setActiveTool, color, setColor, brushSize, setBrushSize,
     brushShape, setBrushShape, showGrid, setShowGrid, showOnion, setShowOnion,
-    handleCanvasClickOrDrag, applyPrimitiveToFrame, applyBrushMut
+    handleCanvasClickOrDrag, applyPrimitiveToFrame, applyBrushMut,
+    addFrame, deleteFrame
   };
 }
 
