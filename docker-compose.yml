@@ -7,11 +7,11 @@ services:
       POSTGRES_PASSWORD: password123
       POSTGRES_DB: kurumachi_db
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d kurumachi_db"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d kurumachi_db']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -23,7 +23,7 @@ services:
       - ./firmware/web:/app
     command: npx prisma studio
     ports:
-      - "5555:5555"
+      - '5555:5555'
     depends_on:
       db:
         condition: service_healthy
@@ -35,7 +35,7 @@ services:
       context: ./firmware/web
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - ./firmware/web:/app
       - /app/node_modules

@@ -1,6 +1,6 @@
-"use client";
-import RleConverter from "@/components/tools/RleConverter";
-import PixelStudio from "@/components/tools/pixel-studio";
+'use client';
+import RleConverter from '@/components/tools/RleConverter';
+import PixelStudio from '@/components/tools/pixel-studio';
 
 export default function ToolsPage() {
   return (

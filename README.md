@@ -27,15 +27,15 @@ The project ships with a **full browser-based Web Suite** for flashing firmware,
 
 ## Hardware
 
-| Component | Part | Notes |
-|---|---|---|
-| MCU | ESP32-C3 Super Mini | RISC-V core, Wi-Fi + BLE |
-| Display | SH1106 1.3″ OLED | I²C @ 400 kHz, 128×64 |
-| IMU | BMI160 | 6-axis, roll/pitch tracking |
-| Environment | AHT20 + BMP280 | Temp, humidity, pressure |
-| Power | Li-Po 3.7V + TP4057 | ADC battery feedback |
-| Input | Capacitive touch pad | Scene cycling |
-| Audio | Passive buzzer | Tone sequences |
+| Component   | Part                 | Notes                       |
+| ----------- | -------------------- | --------------------------- |
+| MCU         | ESP32-C3 Super Mini  | RISC-V core, Wi-Fi + BLE    |
+| Display     | SH1106 1.3″ OLED     | I²C @ 400 kHz, 128×64       |
+| IMU         | BMI160               | 6-axis, roll/pitch tracking |
+| Environment | AHT20 + BMP280       | Temp, humidity, pressure    |
+| Power       | Li-Po 3.7V + TP4057  | ADC battery feedback        |
+| Input       | Capacitive touch pad | Scene cycling               |
+| Audio       | Passive buzzer       | Tone sequences              |
 
 The enclosure is derived from the **Mochi** housing (MakerWorld) and distributed under **CC BY-NC-SA 4.0**. STL files and the full Blender source are in `firmware/web/public/kurumachi/`.
 
@@ -68,13 +68,13 @@ Animations are stored as **inverted XBM C headers** in PROGMEM, converted from G
 
 44 animations across five categories, each a GIF converted to an XBM frame array:
 
-| Category | Animations |
-|---|---|
-| **Actions** | eat · pingpong · sleepy · sneeze × 2 · speed · water gun × 2 · yawn |
-| **Emotions** | angry × 4 · devil · distracted · dizzy · frustrated · happy · love × 2 · proud · relaxed · scared · smile · smirk · surprised · uwu |
-| **Eyes** | look left · look right · peek · squint · wink |
-| **Effects** | rotate · sakura · shrink |
-| **System / Theme** | idle · scx · bee · dragon · nose fire · hello · MD · slayer · cry |
+| Category           | Animations                                                                                                                          |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Actions**        | eat · pingpong · sleepy · sneeze × 2 · speed · water gun × 2 · yawn                                                                 |
+| **Emotions**       | angry × 4 · devil · distracted · dizzy · frustrated · happy · love × 2 · proud · relaxed · scared · smile · smirk · surprised · uwu |
+| **Eyes**           | look left · look right · peek · squint · wink                                                                                       |
+| **Effects**        | rotate · sakura · shrink                                                                                                            |
+| **System / Theme** | idle · scx · bee · dragon · nose fire · hello · MD · slayer · cry                                                                   |
 
 To add your own:
 
@@ -162,18 +162,21 @@ kurumachi/
 ## KURUMACHI. ECOSYSTEM ROADMAP
 
 STAGE 1: CORE INFRASTRUCTURE [COMPLETED]
+
 - Web Deployment Suite architecture implementation (Next.js 15).
 - Web Serial API driverless integration for ESP32-C3 USART pipelines.
 - WebGL-driven 3D CAD asset inspector using HTML5 Canvas & Three.js.
 - Client-side mathematical RLE encoder engine.
 
 STAGE 2: FIRMWARE OPTIMIZATION & CUSTOM ASSETS [IN PROGRESS]
+
 - Hardware debug and stability verification of the RISC-V C++ framework.
 - Implementation of dynamic client-to-node animation buffering.
 - Development of runtime custom RLE stream loading over Wi-Fi (WebSockets/HTTP Server).
 - Tilt/Roll active correction routines based on 6-Axis BMI160 IMU registers.
 
 STAGE 3: THE DIPLOMA EXTENSION (AUTOMOTIVE & MOBILE HARNESS)
+
 - Development of a cross-platform mobile app using Dart & Flutter.
 - Automotive integration via Skoda Fabia Mk1 CAN-Bus / K-Line hardware sniffing.
 - Bluetooth Low Energy (BLE) secure authentication and telemetry logging.
@@ -183,7 +186,7 @@ STAGE 3: THE DIPLOMA EXTENSION (AUTOMOTIVE & MOBILE HARNESS)
 
 ## License
 
-| Layer | License |
-|---|---|
-| Firmware & Web Suite | [MIT](LICENSE) |
-| Hardware enclosure | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) — derived from Mochi (MakerWorld) |
+| Layer                | License                                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------------------------- |
+| Firmware & Web Suite | [MIT](LICENSE)                                                                                          |
+| Hardware enclosure   | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) — derived from Mochi (MakerWorld) |

@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { parseGIF, decompressFrames } from "gifuct-js";
+import { useState } from 'react';
+import { parseGIF, decompressFrames } from 'gifuct-js';
 
 export function useGifProcessor() {
-  const [generatedCode, setGeneratedCode] = useState<string>("");
+  const [generatedCode, setGeneratedCode] = useState<string>('');
 
   const processGif = async (selectedFile: File | null, threshold: number, invert: boolean) => {
     if (!selectedFile) return;
@@ -18,14 +18,14 @@ export function useGifProcessor() {
       const framesRle: number[][] = [];
       const delays: number[] = [];
 
-      const canvas = document.createElement("canvas");
+      const canvas = document.createElement('canvas');
       canvas.width = TARGET_W;
       canvas.height = TARGET_H;
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      const tempCanvas = document.createElement("canvas");
-      const tempCtx = tempCanvas.getContext("2d");
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
 
       for (let i = 0; i < frames.length; i++) {
         const frame = frames[i];
@@ -34,14 +34,14 @@ export function useGifProcessor() {
         const frameImageData = new ImageData(
           new Uint8ClampedArray(frame.patch),
           frame.dims.width,
-          frame.dims.height
+          frame.dims.height,
         );
 
         tempCanvas.width = frame.dims.width;
         tempCanvas.height = frame.dims.height;
         tempCtx?.putImageData(frameImageData, 0, 0);
 
-        ctx.fillStyle = "#FFFFFF";
+        ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, TARGET_W, TARGET_H);
 
         const srcW = frame.dims.width;
@@ -90,11 +90,14 @@ export function useGifProcessor() {
         framesRle.push(rle);
       }
 
-      const varName = selectedFile.name.toLowerCase().replace(/[^a-z0-9]/g, "_").replace("_gif", "");
+      const varName = selectedFile.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '_')
+        .replace('_gif', '');
       const frameCount = framesRle.length;
       let rleSize = 0;
-      framesRle.forEach(f => rleSize += f.length);
-      const rawSize = frameCount * TARGET_W * TARGET_H / 8;
+      framesRle.forEach((f) => (rleSize += f.length));
+      const rawSize = (frameCount * TARGET_W * TARGET_H) / 8;
 
       let code = `// Source: ${selectedFile.name}\n`;
       code += `#pragma once\n`;
@@ -103,35 +106,34 @@ export function useGifProcessor() {
       code += `#define ${varName.toUpperCase()}_WIDTH        ${TARGET_W}\n`;
       code += `#define ${varName.toUpperCase()}_HEIGHT       ${TARGET_H}\n\n`;
 
-      code += `const uint16_t ${varName}_delays[${frameCount}] PROGMEM = {${delays.join(", ")}};\n\n`;
+      code += `const uint16_t ${varName}_delays[${frameCount}] PROGMEM = {${delays.join(', ')}};\n\n`;
 
       framesRle.forEach((rle, i) => {
-        const hexVals = rle.map(b => "0x" + b.toString(16).toUpperCase().padStart(2, "0"));
+        const hexVals = rle.map((b) => '0x' + b.toString(16).toUpperCase().padStart(2, '0'));
         const rows: string[] = [];
         for (let k = 0; k < hexVals.length; k += 16) {
-          rows.push("  " + hexVals.slice(k, k + 16).join(", "));
+          rows.push('  ' + hexVals.slice(k, k + 16).join(', '));
         }
-        code += `const uint8_t ${varName}_frame${i.toString().padStart(3, "0")}[${rle.length}] PROGMEM = {\n`;
-        code += rows.join(",\n") + "\n};\n\n";
+        code += `const uint8_t ${varName}_frame${i.toString().padStart(3, '0')}[${rle.length}] PROGMEM = {\n`;
+        code += rows.join(',\n') + '\n};\n\n';
       });
 
-      const sizeVals = framesRle.map(f => f.length).join(", ");
+      const sizeVals = framesRle.map((f) => f.length).join(', ');
       code += `const uint16_t ${varName}_sizes[${frameCount}] PROGMEM = {${sizeVals}};\n\n`;
 
-      const ptrList = framesRle.map((_, i) => `${varName}_frame${i.toString().padStart(3, "0")}`);
+      const ptrList = framesRle.map((_, i) => `${varName}_frame${i.toString().padStart(3, '0')}`);
       code += `const uint8_t* const ${varName}_frames[${frameCount}] PROGMEM = {\n`;
       for (let k = 0; k < ptrList.length; k += 4) {
         const chunk = ptrList.slice(k, k + 4);
-        const comma = k + 4 < frameCount ? "," : "";
-        code += "  " + chunk.join(", ") + comma + "\n";
+        const comma = k + 4 < frameCount ? ',' : '';
+        code += '  ' + chunk.join(', ') + comma + '\n';
       }
       code += `};\n`;
 
       code = `// Compressed Size: ${rleSize} bytes (Original: ${rawSize} bytes)\n` + code;
       setGeneratedCode(code);
-
     } catch (error) {
-      console.error("Error processing GIF:", error);
+      console.error('Error processing GIF:', error);
       alert("Failed to process GIF. Make sure it's a valid animated GIF.");
     }
   };

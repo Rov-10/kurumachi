@@ -1,0 +1,15 @@
+node_modules
+.next
+dist
+build
+coverage
+*.png
+*.fzz
+package-lock.json
+.turbo
+apps/firmware
+.DS_Store
+.vscode
+.idea
+.cursor
+.agent*

@@ -1,13 +1,13 @@
-"use client";
-import HeroSection from "../components/HeroSection";
-import CodeShowcase from "../components/CodeShowcase";
-import AnimationsShowcase from "../components/AnimationsShowcase";
-import ScrollButton from "../components/ScrollButton";
+'use client';
+import HeroSection from '../components/HeroSection';
+import CodeShowcase from '../components/CodeShowcase';
+import AnimationsShowcase from '../components/AnimationsShowcase';
+import ScrollButton from '../components/ScrollButton';
 
 export default function Home() {
   const scrollToSection = (id: string) => {
-    if (typeof document !== "undefined") {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    if (typeof document !== 'undefined') {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 

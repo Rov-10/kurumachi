@@ -1,7 +1,7 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
-import { STLLoader } from "three/examples/jsm/loaders/STLLoader.js";
+'use client';
+import { useEffect, useRef, useState } from 'react';
+import * as THREE from 'three';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 
 interface StlViewerProps {
   url: string;
@@ -24,7 +24,7 @@ export default function StlViewer({ url }: StlViewerProps) {
       45,
       container.clientWidth / container.clientHeight,
       0.1,
-      1000
+      1000,
     );
     camera.position.set(0, 0, 80); // Повертаємо оптимальну інженерну точку огляду
 
@@ -54,31 +54,38 @@ export default function StlViewer({ url }: StlViewerProps) {
     let loadedGeometry: THREE.BufferGeometry | null = null;
 
     const loader = new STLLoader();
-    loader.load(url, (geometry: THREE.BufferGeometry) => {
-      loadedGeometry = geometry;
-      geometry.center(); // Центруємо модель відносно локальних осей координат
-      mesh = new THREE.Mesh(geometry, material);
-      
-      // Авто-масштабування (виправляє баг "модель не в кадрі")
-      geometry.computeBoundingSphere();
-      const sphere = geometry.boundingSphere;
-      if (sphere) {
-        const radius = sphere.radius;
-        const scale = 30 / radius; // Масштабуємо будь-яку модель під рамки канвасу
-        mesh.scale.set(scale, scale, scale);
-      }
-      scene.add(mesh);
-      setLoading(false);
-    }, undefined, (err: unknown) => {
-      console.error("Error loading STL Matrix:", err);
-      setLoading(false);
-    });
+    loader.load(
+      url,
+      (geometry: THREE.BufferGeometry) => {
+        loadedGeometry = geometry;
+        geometry.center(); // Центруємо модель відносно локальних осей координат
+        mesh = new THREE.Mesh(geometry, material);
+
+        // Авто-масштабування (виправляє баг "модель не в кадрі")
+        geometry.computeBoundingSphere();
+        const sphere = geometry.boundingSphere;
+        if (sphere) {
+          const radius = sphere.radius;
+          const scale = 30 / radius; // Масштабуємо будь-яку модель під рамки канвасу
+          mesh.scale.set(scale, scale, scale);
+        }
+        scene.add(mesh);
+        setLoading(false);
+      },
+      undefined,
+      (err: unknown) => {
+        console.error('Error loading STL Matrix:', err);
+        setLoading(false);
+      },
+    );
 
     // Ручний трекінг миші для обертання вузла
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
 
-    const handleMouseDown = () => { isDragging = true; };
+    const handleMouseDown = () => {
+      isDragging = true;
+    };
     const handleMouseMove = (e: MouseEvent) => {
       const deltaMove = {
         x: e.clientX - previousMousePosition.x,
@@ -90,11 +97,13 @@ export default function StlViewer({ url }: StlViewerProps) {
       }
       previousMousePosition = { x: e.clientX, y: e.clientY };
     };
-    const handleMouseUp = () => { isDragging = false; };
+    const handleMouseUp = () => {
+      isDragging = false;
+    };
 
-    container.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
+    container.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
 
     let animationFrameId: number;
     const animate = () => {
@@ -112,14 +121,14 @@ export default function StlViewer({ url }: StlViewerProps) {
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("resize", handleResize);
-      container.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener('resize', handleResize);
+      container.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
