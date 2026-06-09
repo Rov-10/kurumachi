@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User, Animation } from './entities/kurumachi.entity';
 import { Account, Session, VerificationToken } from './entities/nextauth.entity';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { Account, Session, VerificationToken } from './entities/nextauth.entity'
       synchronize: true,
     }),
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
