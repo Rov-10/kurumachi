@@ -2,7 +2,6 @@
 
 import { useState, useRef, DragEvent, ChangeEvent, useEffect } from "react";
 import { Binary, Copy, Check, UploadCloud, FileImage } from "lucide-react";
-// @ts-ignore
 import { parseGIF, decompressFrames } from "gifuct-js";
 
 export default function RleConverter() {
@@ -15,7 +14,6 @@ export default function RleConverter() {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Слухач для отримання GIF з PixelStudio
   useEffect(() => {
     const handleCustomGif = (e: Event) => {
       const customEvent = e as CustomEvent<File>;
@@ -49,7 +47,6 @@ export default function RleConverter() {
     }
   };
 
-  // --- Логіка конвертації (порт з Python gif2header.py) ---
   const processGif = async () => {
     if (!selectedFile) return;
 
@@ -64,7 +61,6 @@ export default function RleConverter() {
       const framesRle: number[][] = [];
       const delays: number[] = [];
 
-      // Використовуємо тимчасовий канвас для ресайзу (тут scale="fit")
       const canvas = document.createElement("canvas");
       canvas.width = TARGET_W;
       canvas.height = TARGET_H;
@@ -78,23 +74,19 @@ export default function RleConverter() {
         const frame = frames[i];
         delays.push(frame.delay || 100);
 
-        // Створюємо ImageData з кадру GIF
         const frameImageData = new ImageData(
           new Uint8ClampedArray(frame.patch),
           frame.dims.width,
           frame.dims.height
         );
 
-        // Малюємо кадр на тимчасовий канвас
         tempCanvas.width = frame.dims.width;
         tempCanvas.height = frame.dims.height;
         tempCtx?.putImageData(frameImageData, 0, 0);
 
-        // Очищаємо основний канвас (білий фон)
         ctx.fillStyle = "#FFFFFF";
         ctx.fillRect(0, 0, TARGET_W, TARGET_H);
 
-        // Масштабуємо (Fit)
         const srcW = frame.dims.width;
         const srcH = frame.dims.height;
         const ratio = Math.min(TARGET_W / srcW, TARGET_H / srcH);
@@ -103,26 +95,22 @@ export default function RleConverter() {
         const dx = Math.floor((TARGET_W - newW) / 2);
         const dy = Math.floor((TARGET_H - newH) / 2);
 
-        // Малюємо відмасштабований кадр на основний канвас
         ctx.drawImage(tempCanvas, dx, dy, newW, newH);
 
         const imgData = ctx.getImageData(0, 0, TARGET_W, TARGET_H);
         const pixels = imgData.data;
 
-        // 1. Збираємо біти (0 або 1)
         const bitMatrix: number[] = [];
         for (let p = 0; p < pixels.length; p += 4) {
           const r = pixels[p];
           const g = pixels[p + 1];
           const b = pixels[p + 2];
-          // Grayscale
           const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
           let isWhite = brightness >= threshold;
           if (invert) isWhite = !isWhite;
           bitMatrix.push(isWhite ? 1 : 0);
         }
 
-        // 2. RLE Encoding: ((count - 1) << 1) | pixel
         if (bitMatrix.length === 0) {
           framesRle.push([]);
           continue;
@@ -145,7 +133,6 @@ export default function RleConverter() {
         framesRle.push(rle);
       }
 
-      // --- Генерація C Code ---
       const varName = selectedFile.name.toLowerCase().replace(/[^a-z0-9]/g, "_").replace("_gif", "");
       const frameCount = framesRle.length;
       let rleSize = 0;
@@ -200,7 +187,8 @@ export default function RleConverter() {
   };
 
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch animate-in fade-in slide-in-from-bottom-2 duration-500">
+    // ЗМІНА 1: items-start замість items-stretch (щоб лівий блок не розтягувався за правим)
+    <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 items-start animate-in fade-in slide-in-from-bottom-2 duration-500">
       
       {/* Upload Panel */}
       <div className="lg:col-span-1 border border-zinc-800/80 bg-[#050505] p-6 rounded-2xl flex flex-col justify-between text-left relative">
@@ -265,7 +253,8 @@ export default function RleConverter() {
         <div className="pt-6 mt-6 border-t border-zinc-800/50">
           <button
             onClick={processGif}
-            disabled={!selectedFile}
+            // ЗМІНА 2: Виправляємо помилку гідратації React для атрибута disabled
+            disabled={!selectedFile ? true : undefined}
             className={`w-full py-3 rounded-xl font-dot text-xs tracking-widest uppercase transition-all duration-300 font-bold ${
               selectedFile 
                 ? "bg-white text-black hover:bg-zinc-200 cursor-pointer" 
@@ -278,8 +267,9 @@ export default function RleConverter() {
       </div>
 
       {/* Code Terminal Output */}
-      <div className="lg:col-span-2 border border-zinc-800/80 bg-[#050505] rounded-2xl p-6 flex flex-col min-h-[400px]">
-        <div className="flex items-center justify-between text-zinc-500 font-dot text-xs uppercase tracking-widest mb-4 pb-2 border-b border-zinc-800/50">
+      {/* ЗМІНА 3: h-[480px] замість min-h-[400px], щоб жорстко зафіксувати висоту терміналу */}
+      <div className="lg:col-span-2 border border-zinc-800/80 bg-[#050505] rounded-2xl p-6 flex flex-col h-[480px] min-w-0">
+        <div className="flex items-center justify-between text-zinc-500 font-dot text-xs uppercase tracking-widest mb-4 pb-2 border-b border-zinc-800/50 shrink-0">
           <span className="flex items-center gap-2"><Binary className="w-4 h-4" /> Output custom_frame.h</span>
           {generatedCode && (
             <button 
@@ -287,17 +277,17 @@ export default function RleConverter() {
               className="flex items-center gap-1.5 hover:text-white transition-colors"
             >
               {copied ? (
-                <><Check className="w-3.5 h-3.5 text-white" /> Copied!</>
+                <span className="flex items-center gap-1.5 text-white"><Check className="w-3.5 h-3.5" /> Copied!</span>
               ) : (
-                <><Copy className="w-3.5 h-3.5" /> Copy Code</>
+                <span className="flex items-center gap-1.5"><Copy className="w-3.5 h-3.5" /> Copy Code</span>
               )}
             </button>
           )}
         </div>
 
-        <div className="flex-1 overflow-auto font-mono text-[10px] sm:text-xs text-left bg-black p-4 rounded-xl border border-zinc-800/50 select-text relative scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
+        <div className="flex-1 overflow-auto font-mono text-[10px] sm:text-xs text-left bg-black p-4 rounded-xl border border-zinc-800/50 select-text relative scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent min-w-0">
           {generatedCode ? (
-            <pre className="text-zinc-300 whitespace-pre-wrap leading-relaxed">{generatedCode}</pre>
+            <pre className="text-zinc-300 whitespace-pre leading-relaxed inline-block min-w-full">{generatedCode}</pre>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center text-zinc-600 font-sans text-xs uppercase tracking-widest">
               Awaiting matrix upload for byte-stream generation...
