@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useGifProcessor } from "./rle/useGifProcessor";
-import { UploadPanel } from "./rle/UploadPanel";
-import { TerminalOutput } from "./rle/TerminalOutput";
+import { useState, useEffect } from 'react';
+import { useGifProcessor } from './rle/useGifProcessor';
+import { UploadPanel } from './rle/UploadPanel';
+import { TerminalOutput } from './rle/TerminalOutput';
 
 export default function RleConverter() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -18,11 +18,11 @@ export default function RleConverter() {
       const customEvent = e as CustomEvent<File>;
       if (customEvent.detail) {
         setSelectedFile(customEvent.detail);
-        setGeneratedCode("");
+        setGeneratedCode('');
       }
     };
-    window.addEventListener("kurumachi-load-gif", handleCustomGif);
-    return () => window.removeEventListener("kurumachi-load-gif", handleCustomGif);
+    window.addEventListener('kurumachi-load-gif', handleCustomGif);
+    return () => window.removeEventListener('kurumachi-load-gif', handleCustomGif);
   }, [setGeneratedCode]);
 
   return (
@@ -31,7 +31,7 @@ export default function RleConverter() {
         selectedFile={selectedFile}
         setSelectedFile={(file) => {
           setSelectedFile(file);
-          setGeneratedCode(""); // Скидаємо термінал при новому файлі
+          setGeneratedCode(''); // Скидаємо термінал при новому файлі
         }}
         invert={invert}
         setInvert={setInvert}

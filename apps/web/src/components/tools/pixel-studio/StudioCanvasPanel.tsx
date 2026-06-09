@@ -1,5 +1,5 @@
-import { PixelCanvas } from "./PixelCanvas";
-import { PixelEngineType } from "./usePixelEngine";
+import { PixelCanvas } from './PixelCanvas';
+import { PixelEngineType } from './usePixelEngine';
 
 export function StudioCanvasPanel({ engine }: { engine: PixelEngineType }) {
   return (
@@ -7,11 +7,14 @@ export function StudioCanvasPanel({ engine }: { engine: PixelEngineType }) {
     <div className="lg:col-span-2 border border-zinc-800/80 rounded-2xl p-6 bg-[#050505] flex flex-col relative h-full">
       <div className="flex items-start gap-4 mb-2 shrink-0">
         <div className="text-red-500 font-dot text-xs leading-tight flex flex-col items-center">
-          <span>02</span><span>10</span>
+          <span>02</span>
+          <span>10</span>
         </div>
         <div>
           <h2 className="text-white font-dot text-lg uppercase tracking-wider">PIXEL ART STUDIO</h2>
-          <p className="text-zinc-500 text-[10px] font-sans uppercase mt-1 tracking-widest">OLED CANVAS EDITOR & BRUSH ENGINE.</p>
+          <p className="text-zinc-500 text-[10px] font-sans uppercase mt-1 tracking-widest">
+            OLED CANVAS EDITOR & BRUSH ENGINE.
+          </p>
         </div>
       </div>
 
@@ -24,7 +27,10 @@ export function StudioCanvasPanel({ engine }: { engine: PixelEngineType }) {
           FRAME: {engine.currentFrameIdx + 1}/{engine.frames.length}
         </span>
         <input
-          type="range" min="0" max={engine.frames.length - 1} value={engine.currentFrameIdx}
+          type="range"
+          min="0"
+          max={engine.frames.length - 1}
+          value={engine.currentFrameIdx}
           onChange={(e) => engine.setCurrentFrameIdx(Number(e.target.value))}
           className="flex-1 accent-white bg-zinc-900 h-1 appearance-none cursor-pointer rounded-full"
         />

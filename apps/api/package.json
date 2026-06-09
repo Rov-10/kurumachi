@@ -5,7 +5,9 @@
   "scripts": {
     "build": "nest build",
     "dev": "nest start --watch",
-    "start": "nest start"
+    "start": "nest start",
+    "lint": "eslint .",
+    "test": "jest"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -20,7 +22,11 @@
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
+    "@nestjs/testing": "^11.1.26",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.11.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
     "typescript": "^5.3.0"
   }
 }

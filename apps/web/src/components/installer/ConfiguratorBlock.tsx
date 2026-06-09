@@ -1,11 +1,11 @@
-"use client";
-import { useState } from "react";
-import { Sliders, Terminal, Power, RefreshCw, MessageSquare, Play } from "lucide-react";
-import { KURUMACHI_ANIMATIONS, AnimationItem } from "@/app/animations";
+'use client';
+import { useState } from 'react';
+import { Sliders, Terminal, Power, RefreshCw, MessageSquare, Play } from 'lucide-react';
+import { KURUMACHI_ANIMATIONS, AnimationItem } from '@/app/animations';
 
 interface ConfiguratorBlockProps {
   serial: {
-    status: "disconnected" | "connecting" | "connected";
+    status: 'disconnected' | 'connecting' | 'connected';
     logs: string[];
     connect: () => Promise<void>;
     disconnect: () => Promise<void>;
@@ -16,7 +16,7 @@ interface ConfiguratorBlockProps {
 export default function ConfiguratorBlock({ serial }: ConfiguratorBlockProps) {
   const { status, logs, connect, disconnect, sendData } = serial;
   const [brightness, setBrightness] = useState<number>(80);
-  const [customText, setCustomText] = useState<string>("");
+  const [customText, setCustomText] = useState<string>('');
 
   const handleBrightnessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value);
@@ -28,7 +28,7 @@ export default function ConfiguratorBlock({ serial }: ConfiguratorBlockProps) {
     e.preventDefault();
     if (customText.trim()) {
       sendData(`PRINT_OLED:${customText}`);
-      setCustomText("");
+      setCustomText('');
     }
   };
 
@@ -39,26 +39,38 @@ export default function ConfiguratorBlock({ serial }: ConfiguratorBlockProps) {
           <h2 className="font-dot text-2xl text-white flex items-center gap-2">
             <Sliders className="w-5 h-5 text-nothing-red" /> CORE CONFIGURATOR
           </h2>
-          <p className="text-xs text-nothing-text/40 uppercase tracking-widest mt-0.5 font-space">Hardware Interface Subsystem</p>
+          <p className="text-xs text-nothing-text/40 uppercase tracking-widest mt-0.5 font-space">
+            Hardware Interface Subsystem
+          </p>
         </div>
-        
+
         <button
-          onClick={status === "connected" ? disconnect : connect}
+          onClick={status === 'connected' ? disconnect : connect}
           className="w-full sm:w-auto px-6 py-2.5 font-dot tracking-widest uppercase text-xs border border-nothing-text bg-transparent text-white hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center gap-2"
         >
           <Power className="w-3.5 h-3.5" />
-          {status === "connected" ? "Disconnect" : status === "connecting" ? "Connecting..." : "Connect via WebSerial"}
+          {status === 'connected'
+            ? 'Disconnect'
+            : status === 'connecting'
+              ? 'Connecting...'
+              : 'Connect via WebSerial'}
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-nothing-border flex-1">
-        <div className={`p-6 space-y-5 text-left transition-opacity duration-300 ${status === "connected" ? "opacity-100" : "opacity-40 pointer-events-none"}`}>
+        <div
+          className={`p-6 space-y-5 text-left transition-opacity duration-300 ${status === 'connected' ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}
+        >
           <div>
             <label className="font-dot text-sm text-nothing-text/80 uppercase block mb-1.5">
               OLED Brightness: {brightness}%
             </label>
             <input
-              type="range" min="10" max="100" value={brightness} onChange={handleBrightnessChange}
+              type="range"
+              min="10"
+              max="100"
+              value={brightness}
+              onChange={handleBrightnessChange}
               className="w-full h-1 bg-nothing-border accent-nothing-red rounded-lg appearance-none cursor-pointer"
             />
           </div>
@@ -88,11 +100,16 @@ export default function ConfiguratorBlock({ serial }: ConfiguratorBlockProps) {
             </label>
             <form onSubmit={handleSendText} className="flex gap-2">
               <input
-                type="text" placeholder="Type system alert..." value={customText}
+                type="text"
+                placeholder="Type system alert..."
+                value={customText}
                 onChange={(e) => setCustomText(e.target.value)}
                 className="flex-1 bg-black border border-nothing-border px-3 py-1.5 text-xs focus:outline-none focus:border-nothing-red font-space"
               />
-              <button type="submit" className="border border-nothing-border px-3 py-1.5 hover:bg-white hover:text-black transition-colors">
+              <button
+                type="submit"
+                className="border border-nothing-border px-3 py-1.5 hover:bg-white hover:text-black transition-colors"
+              >
                 <MessageSquare className="w-3.5 h-3.5" />
               </button>
             </form>
@@ -100,7 +117,7 @@ export default function ConfiguratorBlock({ serial }: ConfiguratorBlockProps) {
 
           <div className="pt-1">
             <button
-              onClick={() => sendData("SYS_RESET")}
+              onClick={() => sendData('SYS_RESET')}
               className="w-full border border-nothing-border py-2 text-[10px] uppercase tracking-widest font-dot flex items-center justify-center gap-2 hover:border-nothing-red hover:text-nothing-red transition-colors"
             >
               <RefreshCw className="w-3 h-3" /> Reset Dev Kit
@@ -115,10 +132,21 @@ export default function ConfiguratorBlock({ serial }: ConfiguratorBlockProps) {
           </div>
           <div className="flex-1 overflow-y-auto font-space text-[11px] text-left space-y-1.5 pr-1 select-text">
             {logs.length === 0 ? (
-              <p className="text-nothing-text/20 italic">Awaiting hardware initialization sequence...</p>
+              <p className="text-nothing-text/20 italic">
+                Awaiting hardware initialization sequence...
+              </p>
             ) : (
               logs.map((log: string, idx: number) => (
-                <p key={idx} className={log.includes("Sending") ? "text-nothing-red" : log.includes("connected") ? "text-green-500" : "text-nothing-text/60"}>
+                <p
+                  key={idx}
+                  className={
+                    log.includes('Sending')
+                      ? 'text-nothing-red'
+                      : log.includes('connected')
+                        ? 'text-green-500'
+                        : 'text-nothing-text/60'
+                  }
+                >
                   {log}
                 </p>
               ))

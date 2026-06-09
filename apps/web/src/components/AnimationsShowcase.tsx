@@ -1,7 +1,7 @@
-"use client";
-import Image from "next/image";
-import { KURUMACHI_ANIMATIONS, AnimationItem } from "../app/animations";
-import { Smile } from "lucide-react";
+'use client';
+import Image from 'next/image';
+import { KURUMACHI_ANIMATIONS, AnimationItem } from '../app/animations';
+import { Smile } from 'lucide-react';
 
 export default function AnimationsShowcase() {
   return (
@@ -18,8 +18,8 @@ export default function AnimationsShowcase() {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {KURUMACHI_ANIMATIONS.map((anim: AnimationItem) => (
-          <div 
-            key={anim.id} 
+          <div
+            key={anim.id}
             className="border border-nothing-border bg-nothing-gray/10 rounded-xl overflow-hidden group hover:border-nothing-text/50 transition-all duration-300 flex flex-col"
           >
             {/* Контейнер для Гіфки */}
@@ -27,12 +27,12 @@ export default function AnimationsShowcase() {
               <div className="w-[128px] h-[64px] relative border border-dashed border-nothing-border/40 flex items-center justify-center bg-black rounded shadow-[0_0_15px_rgba(255,255,255,0.02)]">
                 {/* Використовуємо нативні шляхи public/animations/ */}
                 <Image
-                    src={`/animations/${anim.gifName}`}// <-- Просто передаємо імпортований модуль
-                    alt={anim.name}
-                    width={128}
-                    height={64}
-                    unoptimized
-                    className="object-contain pixelated filter contrast-125 brightness-110"
+                  src={`/animations/${anim.gifName}`} // <-- Просто передаємо імпортований модуль
+                  alt={anim.name}
+                  width={128}
+                  height={64}
+                  unoptimized
+                  className="object-contain pixelated filter contrast-125 brightness-110"
                 />
               </div>
               <span className="absolute top-2 right-2 font-mono text-[9px] px-1.5 py-0.5 bg-nothing-border text-nothing-text/50 uppercase rounded">
