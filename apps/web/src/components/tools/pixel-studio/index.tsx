@@ -13,7 +13,6 @@ export default function PixelStudio() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
 
-  // --- Безшовна генерація GIF ---
   useEffect(() => {
     const timer = setTimeout(() => {
       if (engine.frames.length === 0) return;

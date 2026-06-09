@@ -1,0 +1,9 @@
+{
+  "name": "@kurumachi/firmware",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "platformio run",
+    "dev": "echo 'PlatformIO compile on save'"
+  }
+}

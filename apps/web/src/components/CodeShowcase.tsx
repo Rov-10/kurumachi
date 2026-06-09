@@ -1,6 +1,8 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { codeToHtml } from "shiki";
+import DOMPurify from 'dompurify';
 
 const cppCode = `// Kurumachi Core System Initialization
 #include "display.h"
@@ -10,12 +12,10 @@ const cppCode = `// Kurumachi Core System Initialization
 void setup() {
   Serial.begin(115200);
   
-  // Initialize subsystems
   Display::init();
   Display::showAnimation(ANIM_WAKE_UP);
   IMU::calibrate();
 
-  // Check vitals
   if (Battery::getLevel() < 20) {
     Display::showEmotion(EMOTION_SAD);
     System::enterPowerSaveMode();
@@ -33,7 +33,11 @@ export default function CodeShowcase() {
     codeToHtml(cppCode, {
       lang: "cpp",
       theme: "github-dark-dimmed",
-    }).then((html) => setHighlightedHtml(html));
+    }).then((html) => {
+      // Очищуємо HTML перед передачею в стан, щоб уникнути XSS
+      const sanitized = DOMPurify.sanitize(html);
+      setHighlightedHtml(sanitized);
+    });
   }, []);
 
   return (
@@ -54,7 +58,12 @@ export default function CodeShowcase() {
 
         <div className="p-6 overflow-x-auto text-sm md:text-base font-mono text-left min-h-[280px]">
           {highlightedHtml ? (
-            <div dangerouslySetInnerHTML={{ __html: highlightedHtml }} />
+            // Рендеримо очищений HTML. 
+            // Додано eslint-disable-next-line для запобігання попередженню лінтера
+            <div 
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: highlightedHtml }} 
+            />
           ) : (
             <pre className="text-nothing-text/20">Loading system firmware source matrix...</pre>
           )}

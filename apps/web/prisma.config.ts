@@ -1,8 +1,7 @@
-import { defineConfig } from '@prisma/config';
-
-export default defineConfig({
+// Видаляємо імпорт, якого не існує
+export default {
   schema: 'prisma/schema.prisma',
   datasource: {
     url: process.env.DATABASE_URL as string,
   },
-});
+};

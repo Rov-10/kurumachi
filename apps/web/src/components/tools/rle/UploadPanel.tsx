@@ -108,7 +108,7 @@ export function UploadPanel({ selectedFile, setSelectedFile, invert, setInvert, 
       <div className="pt-6 mt-6 border-t border-zinc-800/50">
         <button
           onClick={onProcess}
-          disabled={!selectedFile}
+          disabled={selectedFile === null}
           className={`w-full py-3 rounded-xl font-dot text-xs tracking-widest uppercase transition-all duration-300 font-bold ${
             selectedFile ? "bg-white text-black hover:bg-zinc-200 cursor-pointer" : "border border-zinc-800 text-zinc-600 bg-black cursor-not-allowed"
           }`}

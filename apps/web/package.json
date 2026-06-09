@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@kurumachi/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,6 +12,7 @@
     "@google/model-viewer": "^4.3.1",
     "@next-auth/prisma-adapter": "^1.0.7",
     "clsx": "^2.1.1",
+    "dompurify": "^3.4.8",
     "framer-motion": "^12.40.0",
     "gifenc": "^1.0.3",
     "gifuct-js": "^2.1.2",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/dompurify": "^3.0.5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
