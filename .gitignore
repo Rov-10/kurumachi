@@ -16,9 +16,12 @@
 # next.js
 /.next/
 /out/
+#nest.js
+
+
 
 # production
-/build
+build
 
 # misc
 .DS_Store
