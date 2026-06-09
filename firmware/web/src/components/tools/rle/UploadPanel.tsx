@@ -22,10 +22,8 @@ export function UploadPanel({ selectedFile, setSelectedFile, invert, setInvert, 
       const url = URL.createObjectURL(selectedFile);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPreviewUrl(url);
-      // Очищення пам'яті при зміні файлу
       return () => URL.revokeObjectURL(url);
     } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPreviewUrl(null);
     }
   }, [selectedFile]);

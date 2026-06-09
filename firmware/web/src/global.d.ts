@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { ModelViewerElement } from "@google/model-viewer";
 
+declare module 'gifenc';
 declare global {
   namespace React {
     namespace JSX {
